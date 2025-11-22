@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinanceFlow - Sistema Financeiro</title>
+    <title>FinancialControl - Sistema Financeiro</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -772,14 +772,14 @@
     <div id="loginScreen" class="login-container">
         <div class="login-box">
             <div class="logo">
-                <i class="fas fa-chart-line"></i> FinanceFlow
+                <i class="fas fa-chart-line"></i> FinancialControl
             </div>
             <div class="logo-subtitle">Controle suas finanças de forma inteligente</div>
             
             <form id="loginForm">
                 <div class="form-group">
-                    <label class="form-label">E-mail</label>
-                    <input type="email" id="loginEmail" class="form-control" placeholder="seu@email.com" required>
+                    <label class="form-label">Usuário</label>
+                    <input type="email" id="loginEmail" class="form-control" placeholder="Seu usuário" required>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Senha</label>
@@ -808,7 +808,7 @@
                     <i class="fas fa-bars"></i>
                 </button>
                 <div class="header-left">
-                    <h1><i class="fas fa-chart-line"></i> FinanceFlow</h1>
+                    <h1><i class="fas fa-chart-line"></i> FinancialControl</h1>
                 </div>
             </div>
             <div class="user-info">
@@ -1177,8 +1177,8 @@
         </div>
     </div>
     
-    <!-- Botão flutuante para nova transação -->
-    <button class="floating-action-btn" onclick="openTab('transacoes')">
+    <!-- Botão flutuante para nova transação (só aparece após o login) -->
+    <button class="floating-action-btn" id="floatingBtn" style="display: none;" onclick="openTab('transacoes')">
         <i class="fas fa-plus"></i>
     </button>
 
@@ -1218,22 +1218,22 @@
         // Função para salvar dados de login no localStorage
         function salvarDadosLogin(email, senha, lembrar) {
             if (lembrar) {
-                localStorage.setItem('financeFlow_email', email);
-                localStorage.setItem('financeFlow_senha', senha);
-                localStorage.setItem('financeFlow_lembrar', 'true');
+                localStorage.setItem('financialControl_email', email);
+                localStorage.setItem('financialControl_senha', senha);
+                localStorage.setItem('financialControl_lembrar', 'true');
             } else {
-                localStorage.removeItem('financeFlow_email');
-                localStorage.removeItem('financeFlow_senha');
-                localStorage.removeItem('financeFlow_lembrar');
+                localStorage.removeItem('financialControl_email');
+                localStorage.removeItem('financialControl_senha');
+                localStorage.removeItem('financialControl_lembrar');
             }
         }
 
         // Função para carregar dados de login salvos
         function carregarDadosLogin() {
-            const lembrar = localStorage.getItem('financeFlow_lembrar');
+            const lembrar = localStorage.getItem('financialControl_lembrar');
             if (lembrar === 'true') {
-                const email = localStorage.getItem('financeFlow_email');
-                const senha = localStorage.getItem('financeFlow_senha');
+                const email = localStorage.getItem('financialControl_email');
+                const senha = localStorage.getItem('financialControl_senha');
                 if (email && senha) {
                     document.getElementById('loginEmail').value = email;
                     document.getElementById('loginSenha').value = senha;
@@ -1290,6 +1290,7 @@
                 usuarioLogado = usuario;
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('app').style.display = 'block';
+                document.getElementById('floatingBtn').style.display = 'flex';
                 
                 document.getElementById('userName').textContent = usuario.nome;
                 document.getElementById('userRole').textContent = usuario.nivel_acesso === 'admin' ? 'Administrador' : 'Usuário';
@@ -1674,7 +1675,7 @@
             }
         });
 
-        // Cadastro de usuários (APENAS ADMIN)
+        // Cadastro de usuários (APENAS PARA ADMIN)
         document.getElementById('usuarioForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -2235,6 +2236,7 @@
             usuarioLogado = null;
             document.getElementById('app').style.display = 'none';
             document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('floatingBtn').style.display = 'none';
             document.getElementById('loginForm').reset();
             document.getElementById('loginMessage').style.display = 'none';
         }
