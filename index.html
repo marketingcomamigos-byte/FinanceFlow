@@ -1,0 +1,2285 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinanceFlow - Sistema Financeiro</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --info: #4895ef;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --border: #e9ecef;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--dark);
+            font-size: 14px;
+        }
+        
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+        }
+        
+        .login-box {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        
+        .logo-subtitle {
+            color: var(--gray);
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1.5px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+        }
+        
+        .checkbox-group label {
+            font-size: 0.85rem;
+            color: var(--gray);
+            cursor: pointer;
+        }
+        
+        .btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+        
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+        
+        .btn-info {
+            background: var(--info);
+            color: white;
+        }
+        
+        .btn-block {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn-lg {
+            padding: 12px 20px;
+            font-size: 0.95rem;
+        }
+        
+        .btn-sm {
+            padding: 6px 10px;
+            font-size: 0.8rem;
+        }
+        
+        .btn-xs {
+            padding: 4px 8px;
+            font-size: 0.75rem;
+        }
+        
+        .alert {
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .app {
+            display: none;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin: 10px;
+            min-height: calc(100vh - 20px);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left h1 {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .user-avatar {
+            width: 30px;
+            height: 30px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            background: var(--light);
+            border-bottom: 1px solid var(--border);
+            padding: 0 15px;
+            overflow-x: auto;
+        }
+        
+        .nav-tab {
+            padding: 12px 15px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            border-bottom: 2px solid transparent;
+            font-weight: 500;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            font-size: 0.8rem;
+        }
+        
+        .nav-tab.active {
+            border-bottom-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 15px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .card-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 8px 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+        
+        th {
+            background: var(--light);
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+        
+        .receita {
+            color: #28a745;
+            font-weight: 600;
+        }
+        
+        .despesa {
+            color: #dc3545;
+            font-weight: 600;
+        }
+        
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .summary-card {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+            border-left: 3px solid var(--primary);
+        }
+        
+        .summary-card.receita {
+            border-left-color: #28a745;
+        }
+        
+        .summary-card.despesa {
+            border-left-color: #dc3545;
+        }
+        
+        .summary-card.saldo-acumulado {
+            border-left-color: #4361ee;
+            background: linear-gradient(135deg, #f8f9ff 0%, #eef0ff 100%);
+        }
+        
+        .summary-card h3 {
+            font-size: 0.75rem;
+            color: var(--gray);
+            margin-bottom: 8px;
+        }
+        
+        .summary-card .value {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+        
+        .summary-card .subtitle {
+            font-size: 0.7rem;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+        
+        .saldo-positivo {
+            color: #28a745;
+        }
+        
+        .saldo-negativo {
+            color: #dc3545;
+        }
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+        
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .quick-action-card {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            text-align: center;
+            padding: 20px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .quick-action-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .quick-action-card i {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+        
+        .quick-action-card h3 {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        
+        .quick-action-card p {
+            font-size: 0.75rem;
+            opacity: 0.9;
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+        
+        /* Botão moderno para nova transação */
+        .floating-action-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.2);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .floating-action-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        
+        /* Container de gráficos */
+        .charts-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .chart-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+        }
+        
+        .chart-card h3 {
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+            color: var(--dark);
+        }
+        
+        .chart-wrapper {
+            position: relative;
+            height: 250px;
+        }
+        
+        /* Container com rolagem para transações em mobile */
+        .transactions-scroll-container {
+            max-height: 350px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+        
+        /* Estilos específicos para tabela responsiva */
+        .transactions-table {
+            width: 100%;
+        }
+        
+        .transactions-table th:nth-child(1),
+        .transactions-table td:nth-child(1) {
+            min-width: 80px; /* Data */
+        }
+        
+        .transactions-table th:nth-child(2),
+        .transactions-table td:nth-child(2) {
+            min-width: 120px; /* Descrição */
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .transactions-table th:nth-child(3),
+        .transactions-table td:nth-child(3) {
+            min-width: 90px; /* Categoria */
+        }
+        
+        .transactions-table th:nth-child(4),
+        .transactions-table td:nth-child(4) {
+            min-width: 80px; /* Valor */
+        }
+        
+        .transactions-table th:nth-child(5),
+        .transactions-table td:nth-child(5) {
+            min-width: 70px; /* Tipo */
+        }
+        
+        .transactions-table th:nth-child(6),
+        .transactions-table td:nth-child(6) {
+            min-width: 60px; /* Ações */
+            text-align: center;
+        }
+        
+        /* Estilos para opções de parcelamento */
+        .parcelamento-options {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .parcelamento-options.active {
+            display: block;
+        }
+        
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            body {
+                font-size: 13px;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+                padding: 0;
+                display: none;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: var(--light);
+                z-index: 1000;
+                max-height: 70vh;
+                overflow-y: auto;
+            }
+
+            .nav-tabs.mobile-open {
+                display: flex;
+            }
+
+            .nav-tab {
+                border-bottom: 1px solid var(--border);
+                border-left: 2px solid transparent;
+                padding: 12px 15px;
+                justify-content: flex-start;
+            }
+
+            .nav-tab.active {
+                border-left-color: var(--primary);
+                border-bottom-color: var(--border);
+            }
+
+            .header {
+                padding: 12px 15px;
+            }
+            
+            .header-left h1 {
+                font-size: 1rem;
+            }
+
+            .header-right {
+                margin-top: 8px;
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .app {
+                margin: 8px;
+                min-height: calc(100vh - 16px);
+            }
+
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .action-buttons {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            /* Ajustes específicos para a tabela em mobile */
+            .transactions-table th,
+            .transactions-table td {
+                padding: 6px 4px;
+                font-size: 0.7rem;
+            }
+            
+            .transactions-table th:nth-child(1),
+            .transactions-table td:nth-child(1) {
+                min-width: 60px; /* Data menor em mobile */
+            }
+            
+            .transactions-table th:nth-child(2),
+            .transactions-table td:nth-child(2) {
+                min-width: 80px; /* Descrição menor em mobile */
+                max-width: 100px;
+            }
+            
+            .transactions-table th:nth-child(3),
+            .transactions-table td:nth-child(3) {
+                min-width: 70px; /* Categoria menor em mobile */
+            }
+            
+            .transactions-table th:nth-child(4),
+            .transactions-table td:nth-child(4) {
+                min-width: 60px; /* Valor menor em mobile */
+            }
+            
+            .transactions-table th:nth-child(5),
+            .transactions-table td:nth-child(5) {
+                min-width: 50px; /* Tipo menor em mobile */
+            }
+            
+            .transactions-table th:nth-child(6),
+            .transactions-table td:nth-child(6) {
+                min-width: 40px; /* Ações menor em mobile */
+            }
+            
+            .floating-action-btn {
+                bottom: 15px;
+                right: 15px;
+                width: 45px;
+                height: 45px;
+                font-size: 1rem;
+            }
+            
+            .tab-content {
+                padding: 12px;
+            }
+            
+            .card {
+                padding: 12px;
+            }
+            
+            .summary-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-control {
+                padding: 8px 10px;
+                font-size: 0.85rem;
+            }
+            
+            .btn {
+                padding: 8px 12px;
+                font-size: 0.85rem;
+            }
+            
+            /* Garantir que a tabela seja totalmente visível */
+            .table-container {
+                width: 100%;
+                overflow-x: auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-box {
+                padding: 20px 15px;
+                margin: 5px;
+            }
+            
+            .logo {
+                font-size: 1.4rem;
+            }
+
+            .export-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                padding: 8px 10px;
+                font-size: 0.8rem;
+            }
+            
+            .chart-wrapper {
+                height: 200px;
+            }
+            
+            /* Ajustes ainda mais específicos para telas muito pequenas */
+            .transactions-table th,
+            .transactions-table td {
+                padding: 4px 2px;
+                font-size: 0.65rem;
+            }
+        }
+        
+        /* Estilos para desktop */
+        @media (min-width: 769px) {
+            .grid-2 {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .grid-4 {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .charts-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Tela de Login -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-box">
+            <div class="logo">
+                <i class="fas fa-chart-line"></i> FinanceFlow
+            </div>
+            <div class="logo-subtitle">Controle suas finanças de forma inteligente</div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label">E-mail</label>
+                    <input type="email" id="loginEmail" class="form-control" placeholder="seu@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Senha</label>
+                    <input type="password" id="loginSenha" class="form-control" placeholder="Sua senha" required>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="lembrarLogin">
+                    <label for="lembrarLogin">Lembrar meus dados</label>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-block">
+                    <i class="fas fa-sign-in-alt"></i> Entrar no Sistema
+                </button>
+            </form>
+            
+            <div id="loginMessage" class="alert" style="display: none; margin-top: 15px;"></div>
+        </div>
+    </div>
+
+    <!-- Aplicação Principal -->
+    <div id="app" class="app">
+        <div class="header">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="header-left">
+                    <h1><i class="fas fa-chart-line"></i> FinanceFlow</h1>
+                </div>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <div>
+                    <div id="userName" style="font-size: 0.8rem;">Usuário</div>
+                    <div id="userRole" style="font-size: 0.65rem; opacity: 0.8;">Usuário</div>
+                </div>
+                <button onclick="logout()" class="btn btn-danger btn-sm" style="margin-left: 10px;">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </button>
+            </div>
+        </div>
+        
+        <div class="nav-tabs" id="navTabs">
+            <button class="nav-tab active" onclick="openTab('dashboard')">
+                <i class="fas fa-home"></i> Dashboard
+            </button>
+            <button class="nav-tab" onclick="openTab('transacoes')">
+                <i class="fas fa-exchange-alt"></i> Transações
+            </button>
+            <button class="nav-tab" onclick="openTab('relatorios')">
+                <i class="fas fa-chart-bar"></i> Relatórios
+            </button>
+            <button class="nav-tab" id="perfilTab" onclick="openTab('perfil')">
+                <i class="fas fa-user"></i> Meu Perfil
+            </button>
+            <button class="nav-tab" id="adminTab" style="display: none;" onclick="openTab('admin')">
+                <i class="fas fa-cog"></i> Administração
+            </button>
+        </div>
+        
+        <!-- Dashboard -->
+        <div id="dashboard" class="tab-content active">
+            <!-- Card de Ação Rápida -->
+            <div class="grid-3">
+                <div class="quick-action-card" onclick="openTab('transacoes')">
+                    <i class="fas fa-plus-circle"></i>
+                    <h3>Nova Transação</h3>
+                    <p>Adicione uma nova receita ou despesa</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-calendar"></i> Resumo Financeiro</h3>
+                    <div class="action-buttons">
+                        <input type="month" id="filtroMesDashboard" class="form-control" style="min-width: 130px;">
+                        <button onclick="carregarDashboard()" class="btn btn-success btn-sm">
+                            <i class="fas fa-sync-alt"></i> Atualizar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-4">
+                <div class="summary-card receita">
+                    <h3><i class="fas fa-arrow-up"></i> Receitas</h3>
+                    <div id="receitasMes" class="value receita">R$ 0,00</div>
+                    <div class="subtitle">Este mês</div>
+                </div>
+                <div class="summary-card despesa">
+                    <h3><i class="fas fa-arrow-down"></i> Despesas</h3>
+                    <div id="despesasMes" class="value despesa">R$ 0,00</div>
+                    <div class="subtitle">Este mês</div>
+                </div>
+                <div class="summary-card">
+                    <h3><i class="fas fa-balance-scale"></i> Saldo Mensal</h3>
+                    <div id="saldoMes" class="value">R$ 0,00</div>
+                    <div class="subtitle">Este mês</div>
+                </div>
+                <div class="summary-card saldo-acumulado">
+                    <h3><i class="fas fa-piggy-bank"></i> Saldo Acumulado</h3>
+                    <div id="saldoAcumulado" class="value">R$ 0,00</div>
+                    <div class="subtitle">Até o momento</div>
+                </div>
+            </div>
+            
+            <!-- Gráficos no Dashboard -->
+            <div class="charts-container">
+                <div class="chart-card">
+                    <h3><i class="fas fa-chart-pie"></i> Distribuição por Categoria</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="graficoPizza"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3><i class="fas fa-chart-line"></i> Evolução Mensal</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="graficoLinha"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Últimas Transações no Dashboard -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-history"></i> Últimas Transações</h3>
+                </div>
+                <div class="table-container">
+                    <table class="transactions-table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Descrição</th>
+                                <th>Valor</th>
+                                <th>Tipo</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ultimasTransacoesBody">
+                            <tr>
+                                <td colspan="4" style="text-align: center; color: var(--gray);">
+                                    Nenhuma transação encontrada
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Transações -->
+        <div id="transacoes" class="tab-content">
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-plus-circle"></i> Nova Transação</h3>
+                    </div>
+                    <form id="transacaoForm">
+                        <div class="form-group">
+                            <label class="form-label">Descrição</label>
+                            <input type="text" id="descricao" class="form-control" placeholder="Ex: Salário, Aluguel..." required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Valor (R$)</label>
+                            <input type="number" step="0.01" id="valor" class="form-control" placeholder="0,00" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Tipo</label>
+                            <select id="tipo" class="form-control" required>
+                                <option value="receita">Receita</option>
+                                <option value="despesa">Despesa</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Categoria</label>
+                            <select id="categoria" class="form-control" required>
+                                <option value="Salário">Salário</option>
+                                <option value="Alimentação">Alimentação</option>
+                                <option value="Transporte">Transporte</option>
+                                <option value="Moradia">Moradia</option>
+                                <option value="Lazer">Lazer</option>
+                                <option value="Saúde">Saúde</option>
+                                <option value="Educação">Educação</option>
+                                <option value="Outros">Outros</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Data</label>
+                            <input type="date" id="dataTransacao" class="form-control" required>
+                        </div>
+                        
+                        <!-- Opções de Parcelamento/Recorrência -->
+                        <div class="form-group">
+                            <label class="form-label">Tipo de Transação</label>
+                            <select id="tipoTransacao" class="form-control" onchange="toggleParcelamentoOptions()">
+                                <option value="unica">Única</option>
+                                <option value="parcelada">Parcelada</option>
+                                <option value="recorrente">Recorrente</option>
+                            </select>
+                        </div>
+                        
+                        <div id="parcelamentoOptions" class="parcelamento-options">
+                            <div class="form-group">
+                                <label class="form-label" id="parcelamentoLabel">Número de Parcelas</label>
+                                <input type="number" id="numeroParcelas" class="form-control" min="2" value="2">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Frequência</label>
+                                <select id="frequencia" class="form-control">
+                                    <option value="mensal">Mensal</option>
+                                    <option value="bimestral">Bimestral</option>
+                                    <option value="trimestral">Trimestral</option>
+                                    <option value="semestral">Semestral</option>
+                                    <option value="anual">Anual</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-save"></i> Salvar Transação
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-list"></i> Minhas Transações</h3>
+                        <div class="action-buttons">
+                            <input type="month" id="filtroMes" class="form-control" style="min-width: 130px;">
+                            <button onclick="carregarTransacoes()" class="btn btn-success btn-sm">
+                                <i class="fas fa-sync-alt"></i> Atualizar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="transactions-scroll-container">
+                        <div class="table-container">
+                            <table class="transactions-table">
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Descrição</th>
+                                        <th>Categoria</th>
+                                        <th>Valor</th>
+                                        <th>Tipo</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="transacoesBody">
+                                    <tr>
+                                        <td colspan="6" style="text-align: center; color: var(--gray);">
+                                            Nenhuma transação encontrada
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nova Aba: Relatórios -->
+        <div id="relatorios" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-chart-bar"></i> Relatórios Mensais</h3>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Selecione o Mês</label>
+                        <input type="month" id="mesRelatorio" class="form-control">
+                    </div>
+                    <div class="form-group" style="display: flex; align-items: flex-end;">
+                        <button onclick="gerarRelatorio()" class="btn btn-primary">
+                            <i class="fas fa-chart-bar"></i> Gerar Relatório
+                        </button>
+                    </div>
+                </div>
+
+                <div id="relatorioResultado" style="display: none;">
+                    <!-- Resultado do relatório será inserido aqui -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Nova Aba: Perfil do Usuário -->
+        <div id="perfil" class="tab-content">
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-user"></i> Meus Dados</h3>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Nome Completo</label>
+                        <input type="text" id="perfilNome" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">E-mail</label>
+                        <input type="email" id="perfilEmail" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Nível de Acesso</label>
+                        <input type="text" id="perfilNivel" class="form-control" readonly>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-key"></i> Alterar Senha</h3>
+                    </div>
+                    <form id="alterarSenhaForm">
+                        <div class="form-group">
+                            <label class="form-label">Senha Atual</label>
+                            <input type="password" id="senhaAtual" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Nova Senha</label>
+                            <input type="password" id="novaSenhaPerfil" class="form-control" required minlength="4">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Confirmar Nova Senha</label>
+                            <input type="password" id="confirmarNovaSenha" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Alterar Senha
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Administração (APENAS PARA ADMIN) -->
+        <div id="admin" class="tab-content">
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-user-plus"></i> Criar Novo Usuário</h3>
+                    </div>
+                    <form id="usuarioForm">
+                        <div class="form-group">
+                            <label class="form-label">Nome Completo</label>
+                            <input type="text" id="novoNome" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">E-mail</label>
+                            <input type="email" id="novoEmail" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Senha</label>
+                            <input type="password" id="novaSenha" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Nível de Acesso</label>
+                            <select id="novoNivelAcesso" class="form-control" required>
+                                <option value="usuario">Usuário</option>
+                                <option value="admin">Administrador</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-user-plus"></i> Criar Usuário
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-users"></i> Gerenciar Usuários</h3>
+                        <button onclick="carregarUsuarios()" class="btn btn-success btn-sm">
+                            <i class="fas fa-sync-alt"></i> Atualizar
+                        </button>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>E-mail</th>
+                                    <th>Nível</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usuariosBody">
+                                <tr>
+                                    <td colspan="5" style="text-align: center; color: var(--gray);">
+                                        Carregando usuários...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Botão flutuante para nova transação -->
+    <button class="floating-action-btn" onclick="openTab('transacoes')">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <script>
+        // Configuração do Supabase
+        const SUPABASE_URL = 'https://rprocjpzydkondrguzui.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwcm9janB6eWRrb25kcmd1enVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM2ODA2NjIsImV4cCI6MjA3OTI1NjY2Mn0.bD36ix62EYFdnnTKXN3iK9C9AoOeKyWGkY10D-A1tm0';
+        
+        let usuarioLogado = null;
+        let graficoPizza = null;
+        let graficoLinha = null;
+
+        // Função para menu mobile
+        function toggleMobileMenu() {
+            const navTabs = document.getElementById('navTabs');
+            navTabs.classList.toggle('mobile-open');
+        }
+
+        // Função para mostrar/ocultar opções de parcelamento
+        function toggleParcelamentoOptions() {
+            const tipoTransacao = document.getElementById('tipoTransacao').value;
+            const parcelamentoOptions = document.getElementById('parcelamentoOptions');
+            const parcelamentoLabel = document.getElementById('parcelamentoLabel');
+            
+            if (tipoTransacao === 'unica') {
+                parcelamentoOptions.classList.remove('active');
+            } else {
+                parcelamentoOptions.classList.add('active');
+                if (tipoTransacao === 'parcelada') {
+                    parcelamentoLabel.textContent = 'Número de Parcelas';
+                } else {
+                    parcelamentoLabel.textContent = 'Duração (meses)';
+                }
+            }
+        }
+
+        // Função para salvar dados de login no localStorage
+        function salvarDadosLogin(email, senha, lembrar) {
+            if (lembrar) {
+                localStorage.setItem('financeFlow_email', email);
+                localStorage.setItem('financeFlow_senha', senha);
+                localStorage.setItem('financeFlow_lembrar', 'true');
+            } else {
+                localStorage.removeItem('financeFlow_email');
+                localStorage.removeItem('financeFlow_senha');
+                localStorage.removeItem('financeFlow_lembrar');
+            }
+        }
+
+        // Função para carregar dados de login salvos
+        function carregarDadosLogin() {
+            const lembrar = localStorage.getItem('financeFlow_lembrar');
+            if (lembrar === 'true') {
+                const email = localStorage.getItem('financeFlow_email');
+                const senha = localStorage.getItem('financeFlow_senha');
+                if (email && senha) {
+                    document.getElementById('loginEmail').value = email;
+                    document.getElementById('loginSenha').value = senha;
+                    document.getElementById('lembrarLogin').checked = true;
+                }
+            }
+        }
+
+        // Login
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const senha = document.getElementById('loginSenha').value;
+            const lembrar = document.getElementById('lembrarLogin').checked;
+            const loginMessage = document.getElementById('loginMessage');
+            
+            // Salvar dados de login se solicitado
+            salvarDadosLogin(email, senha, lembrar);
+            
+            try {
+                const response = await fetch(
+                    `${SUPABASE_URL}/rest/v1/usuarios?email=eq.${email}`, 
+                    {
+                        headers: {
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                            'Content-Type': 'application/json'
+                        }
+                    }
+                );
+                
+                if (!response.ok) throw new Error('Erro no servidor');
+                
+                const usuarios = await response.json();
+                
+                if (usuarios.length === 0) {
+                    showMessage(loginMessage, 'Usuário não encontrado', false);
+                    return;
+                }
+                
+                const usuario = usuarios[0];
+                
+                if (usuario.senha !== senha) {
+                    showMessage(loginMessage, 'Senha incorreta', false);
+                    return;
+                }
+                
+                if (!usuario.ativo) {
+                    showMessage(loginMessage, 'Usuário desativado. Entre em contato com o administrador.', false);
+                    return;
+                }
+                
+                usuarioLogado = usuario;
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+                
+                document.getElementById('userName').textContent = usuario.nome;
+                document.getElementById('userRole').textContent = usuario.nivel_acesso === 'admin' ? 'Administrador' : 'Usuário';
+                document.getElementById('userAvatar').textContent = usuario.nome.charAt(0).toUpperCase();
+                
+                // Carregar dados do perfil
+                document.getElementById('perfilNome').value = usuario.nome;
+                document.getElementById('perfilEmail').value = usuario.email;
+                document.getElementById('perfilNivel').value = usuario.nivel_acesso === 'admin' ? 'Administrador' : 'Usuário';
+                
+                // Mostrar aba de Administração apenas para administradores
+                if (usuario.nivel_acesso === 'admin') {
+                    document.getElementById('adminTab').style.display = 'flex';
+                    carregarUsuarios();
+                } else {
+                    document.getElementById('adminTab').style.display = 'none';
+                }
+                
+                carregarTransacoes();
+                carregarDashboard();
+                showAlert('Login realizado com sucesso!', 'success');
+                
+            } catch (error) {
+                showMessage(loginMessage, 'Erro ao fazer login', false);
+            }
+        });
+
+        // Dashboard - CARREGAR DADOS DO MÊS SELECIONADO
+        async function carregarDashboard() {
+            if (!usuarioLogado) return;
+            
+            const mesSelecionado = document.getElementById('filtroMesDashboard').value;
+            const mesAtual = mesSelecionado || new Date().toISOString().slice(0, 7);
+            
+            try {
+                const [ano, mes] = mesAtual.split('-');
+                const ultimoDia = new Date(ano, mes, 0).getDate();
+                
+                // Buscar transações do mês selecionado
+                const response = await fetch(
+                    `${SUPABASE_URL}/rest/v1/transacoes?usuario_id=eq.${usuarioLogado.id}&data_transacao=gte.${ano}-${mes}-01&data_transacao=lte.${ano}-${mes}-${ultimoDia}`,
+                    {
+                        headers: {
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                            'Content-Type': 'application/json'
+                        }
+                    }
+                );
+                
+                if (!response.ok) throw new Error('Erro ao carregar dashboard');
+                
+                const transacoes = await response.json();
+                
+                let receitas = 0;
+                let despesas = 0;
+                
+                transacoes.forEach(t => {
+                    if (t.tipo === 'receita') {
+                        receitas += parseFloat(t.valor);
+                    } else {
+                        despesas += parseFloat(t.valor);
+                    }
+                });
+                
+                // Calcular saldo acumulado (incluindo meses anteriores)
+                const saldoAnterior = await calcularSaldoAcumulado(ano, mes);
+                const saldoAtual = saldoAnterior + receitas - despesas;
+                const saldoMensal = receitas - despesas;
+                
+                // Atualizar os cards do dashboard
+                document.getElementById('receitasMes').textContent = `R$ ${receitas.toFixed(2)}`;
+                document.getElementById('despesasMes').textContent = `R$ ${despesas.toFixed(2)}`;
+                document.getElementById('saldoMes').textContent = `R$ ${saldoMensal.toFixed(2)}`;
+                document.getElementById('saldoMes').className = `value ${saldoMensal >= 0 ? 'saldo-positivo' : 'saldo-negativo'}`;
+                
+                document.getElementById('saldoAcumulado').textContent = `R$ ${saldoAtual.toFixed(2)}`;
+                document.getElementById('saldoAcumulado').className = `value ${saldoAtual >= 0 ? 'saldo-positivo' : 'saldo-negativo'}`;
+                
+                // Carregar últimas 5 transações para o dashboard
+                const ultimasTransacoes = transacoes.slice(0, 5);
+                const tbody = document.getElementById('ultimasTransacoesBody');
+                tbody.innerHTML = '';
+                
+                if (ultimasTransacoes.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--gray);">Nenhuma transação encontrada</td></tr>';
+                } else {
+                    ultimasTransacoes.forEach(transacao => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${formatarData(transacao.data_transacao)}</td>
+                            <td>${transacao.descricao}</td>
+                            <td class="${transacao.tipo}">R$ ${parseFloat(transacao.valor).toFixed(2)}</td>
+                            <td>${transacao.tipo === 'receita' ? 'Receita' : 'Despesa'}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+                
+                // Atualizar gráficos
+                atualizarGraficoPizza(transacoes);
+                atualizarGraficoLinha();
+                
+            } catch (error) {
+                console.error('Erro ao carregar dashboard:', error);
+            }
+        }
+
+        // Função para calcular saldo acumulado até o mês anterior
+        async function calcularSaldoAcumulado(ano, mes) {
+            try {
+                // Buscar todas as transações até o mês anterior
+                const mesAnterior = new Date(ano, parseInt(mes) - 1, 0);
+                const anoAnterior = mesAnterior.getFullYear();
+                const mesAnteriorNum = String(mesAnterior.getMonth() + 1).padStart(2, '0');
+                
+                const response = await fetch(
+                    `${SUPABASE_URL}/rest/v1/transacoes?usuario_id=eq.${usuarioLogado.id}&data_transacao=lte.${anoAnterior}-${mesAnteriorNum}-31`,
+                    {
+                        headers: {
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                            'Content-Type': 'application/json'
+                        }
+                    }
+                );
+                
+                if (!response.ok) return 0;
+                
+                const transacoes = await response.json();
+                
+                let saldo = 0;
+                transacoes.forEach(t => {
+                    if (t.tipo === 'receita') {
+                        saldo += parseFloat(t.valor);
+                    } else {
+                        saldo -= parseFloat(t.valor);
+                    }
+                });
+                
+                return saldo;
+            } catch (error) {
+                console.error('Erro ao calcular saldo acumulado:', error);
+                return 0;
+            }
+        }
+
+        // Função para formatar data corretamente
+        function formatarData(dataString) {
+            const data = new Date(dataString);
+            // Ajustar para o fuso horário local
+            const dataAjustada = new Date(data.getTime() + data.getTimezoneOffset() * 60000);
+            return dataAjustada.toLocaleDateString('pt-BR');
+        }
+
+        // Atualizar gráfico de pizza
+        function atualizarGraficoPizza(transacoes) {
+            const ctx = document.getElementById('graficoPizza').getContext('2d');
+            
+            // Destruir gráfico anterior se existir
+            if (graficoPizza) {
+                graficoPizza.destroy();
+            }
+            
+            // Agrupar transações por categoria
+            const categorias = {};
+            transacoes.forEach(t => {
+                if (!categorias[t.categoria]) {
+                    categorias[t.categoria] = 0;
+                }
+                categorias[t.categoria] += parseFloat(t.valor);
+            });
+            
+            const labels = Object.keys(categorias);
+            const data = Object.values(categorias);
+            
+            // Cores para o gráfico
+            const cores = [
+                '#4361ee', '#7209b7', '#4cc9f0', '#f72585', '#f8961e',
+                '#4895ef', '#3a0ca3', '#2a9d8f', '#e9c46a', '#e76f51'
+            ];
+            
+            graficoPizza = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: cores,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: {
+                                    size: window.innerWidth <= 768 ? 10 : 12
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = Math.round((value / total) * 100);
+                                    return `${label}: R$ ${value.toFixed(2)} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Atualizar gráfico de linha
+        async function atualizarGraficoLinha() {
+            const ctx = document.getElementById('graficoLinha').getContext('2d');
+            
+            // Destruir gráfico anterior se existir
+            if (graficoLinha) {
+                graficoLinha.destroy();
+            }
+            
+            try {
+                // Buscar transações dos últimos 6 meses
+                const hoje = new Date();
+                const seisMesesAtras = new Date();
+                seisMesesAtras.setMonth(hoje.getMonth() - 5);
+                
+                const response = await fetch(
+                    `${SUPABASE_URL}/rest/v1/transacoes?usuario_id=eq.${usuarioLogado.id}&data_transacao=gte.${seisMesesAtras.toISOString().slice(0, 10)}&order=data_transacao.asc`,
+                    {
+                        headers: {
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                            'Content-Type': 'application/json'
+                        }
+                    }
+                );
+                
+                if (!response.ok) throw new Error('Erro ao carregar dados para gráfico');
+                
+                const transacoes = await response.json();
+                
+                // Agrupar por mês
+                const dadosPorMes = {};
+                for (let i = 5; i >= 0; i--) {
+                    const data = new Date();
+                    data.setMonth(data.getMonth() - i);
+                    const chave = `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, '0')}`;
+                    dadosPorMes[chave] = { receitas: 0, despesas: 0 };
+                }
+                
+                transacoes.forEach(t => {
+                    const mes = t.data_transacao.slice(0, 7);
+                    if (dadosPorMes[mes]) {
+                        if (t.tipo === 'receita') {
+                            dadosPorMes[mes].receitas += parseFloat(t.valor);
+                        } else {
+                            dadosPorMes[mes].despesas += parseFloat(t.valor);
+                        }
+                    }
+                });
+                
+                const meses = Object.keys(dadosPorMes);
+                const receitas = meses.map(mes => dadosPorMes[mes].receitas);
+                const despesas = meses.map(mes => dadosPorMes[mes].despesas);
+                
+                graficoLinha = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: meses.map(mes => {
+                            const [ano, mesNum] = mes.split('-');
+                            const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+                            return `${meses[parseInt(mesNum) - 1]}/${ano.slice(2)}`;
+                        }),
+                        datasets: [
+                            {
+                                label: 'Receitas',
+                                data: receitas,
+                                borderColor: '#28a745',
+                                backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                                tension: 0.3,
+                                fill: true
+                            },
+                            {
+                                label: 'Despesas',
+                                data: despesas,
+                                borderColor: '#dc3545',
+                                backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                                tension: 0.3,
+                                fill: true
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return 'R$ ' + value.toFixed(2);
+                                    },
+                                    font: {
+                                        size: window.innerWidth <= 768 ? 10 : 12
+                                    }
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    font: {
+                                        size: window.innerWidth <= 768 ? 10 : 12
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    font: {
+                                        size: window.innerWidth <= 768 ? 10 : 12
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+                
+            } catch (error) {
+                console.error('Erro ao carregar gráfico de linha:', error);
+            }
+        }
+
+        // Alterar senha do usuário
+        document.getElementById('alterarSenhaForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (!usuarioLogado) return;
+            
+            const senhaAtual = document.getElementById('senhaAtual').value;
+            const novaSenha = document.getElementById('novaSenhaPerfil').value;
+            const confirmarSenha = document.getElementById('confirmarNovaSenha').value;
+            
+            if (novaSenha !== confirmarSenha) {
+                showAlert('As senhas não coincidem', 'danger');
+                return;
+            }
+            
+            if (senhaAtual !== usuarioLogado.senha) {
+                showAlert('Senha atual incorreta', 'danger');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/usuarios?id=eq.${usuarioLogado.id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ senha: novaSenha })
+                });
+                
+                if (response.ok) {
+                    this.reset();
+                    usuarioLogado.senha = novaSenha;
+                    showAlert('Senha alterada com sucesso!', 'success');
+                } else {
+                    throw new Error('Erro ao alterar senha');
+                }
+            } catch (error) {
+                showAlert('Erro ao alterar senha', 'danger');
+            }
+        });
+
+        // Cadastro de usuários (APENAS ADMIN)
+        document.getElementById('usuarioForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (!usuarioLogado || usuarioLogado.nivel_acesso !== 'admin') {
+                showAlert('Apenas administradores podem criar usuários', 'warning');
+                return;
+            }
+            
+            const novoUsuario = {
+                nome: document.getElementById('novoNome').value,
+                email: document.getElementById('novoEmail').value,
+                senha: document.getElementById('novaSenha').value,
+                nivel_acesso: document.getElementById('novoNivelAcesso').value,
+                ativo: true
+            };
+            
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/usuarios`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(novoUsuario)
+                });
+                
+                if (response.ok) {
+                    this.reset();
+                    carregarUsuarios();
+                    showAlert('Usuário criado com sucesso!', 'success');
+                } else {
+                    throw new Error('Erro ao criar usuário');
+                }
+            } catch (error) {
+                showAlert('Erro ao criar usuário', 'danger');
+            }
+        });
+
+        // Transações (ACESSÍVEL PARA TODOS OS USUÁRIOS)
+        document.getElementById('transacaoForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (!usuarioLogado) {
+                showAlert('Você precisa estar logado para cadastrar transações', 'warning');
+                return;
+            }
+            
+            const descricao = document.getElementById('descricao').value;
+            const valor = parseFloat(document.getElementById('valor').value);
+            const tipo = document.getElementById('tipo').value;
+            const categoria = document.getElementById('categoria').value;
+            const dataTransacao = document.getElementById('dataTransacao').value;
+            const tipoTransacao = document.getElementById('tipoTransacao').value;
+            
+            // Corrigir problema de fuso horário na data
+            const dataCorrigida = new Date(dataTransacao + 'T00:00:00');
+            
+            if (tipoTransacao === 'unica') {
+                // Transação única
+                await salvarTransacao({
+                    usuario_id: usuarioLogado.id,
+                    descricao: descricao,
+                    valor: valor,
+                    tipo: tipo,
+                    categoria: categoria,
+                    data_transacao: dataCorrigida.toISOString().split('T')[0]
+                });
+            } else {
+                // Transação parcelada ou recorrente
+                const numeroParcelas = parseInt(document.getElementById('numeroParcelas').value);
+                const frequencia = document.getElementById('frequencia').value;
+                
+                for (let i = 0; i < numeroParcelas; i++) {
+                    const dataParcela = new Date(dataCorrigida);
+                    
+                    // Calcular data da parcela baseada na frequência
+                    if (frequencia === 'mensal') {
+                        dataParcela.setMonth(dataParcela.getMonth() + i);
+                    } else if (frequencia === 'bimestral') {
+                        dataParcela.setMonth(dataParcela.getMonth() + (i * 2));
+                    } else if (frequencia === 'trimestral') {
+                        dataParcela.setMonth(dataParcela.getMonth() + (i * 3));
+                    } else if (frequencia === 'semestral') {
+                        dataParcela.setMonth(dataParcela.getMonth() + (i * 6));
+                    } else if (frequencia === 'anual') {
+                        dataParcela.setFullYear(dataParcela.getFullYear() + i);
+                    }
+                    
+                    await salvarTransacao({
+                        usuario_id: usuarioLogado.id,
+                        descricao: `${descricao} ${tipoTransacao === 'parcelada' ? `Parcela ${i+1}/${numeroParcelas}` : `Recorrência ${i+1}`}`,
+                        valor: tipoTransacao === 'parcelada' ? (valor / numeroParcelas) : valor,
+                        tipo: tipo,
+                        categoria: categoria,
+                        data_transacao: dataParcela.toISOString().split('T')[0]
+                    });
+                }
+            }
+            
+            this.reset();
+            document.getElementById('dataTransacao').value = new Date().toISOString().split('T')[0];
+            document.getElementById('parcelamentoOptions').classList.remove('active');
+            carregarTransacoes();
+            carregarDashboard();
+            showAlert('Transação(s) salva(s) com sucesso!', 'success');
+        });
+
+        // Função auxiliar para salvar transação
+        async function salvarTransacao(transacao) {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/transacoes`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(transacao)
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Erro ao salvar transação');
+                }
+            } catch (error) {
+                console.error('Erro ao salvar transação:', error);
+                throw error;
+            }
+        }
+
+        async function carregarTransacoes() {
+            if (!usuarioLogado) return;
+            
+            const mesFiltro = document.getElementById('filtroMes').value;
+            let url = `${SUPABASE_URL}/rest/v1/transacoes?usuario_id=eq.${usuarioLogado.id}&order=data_transacao.desc`;
+            
+            if (mesFiltro) {
+                const [ano, mes] = mesFiltro.split('-');
+                const ultimoDia = new Date(ano, mes, 0).getDate();
+                url += `&data_transacao=gte.${ano}-${mes}-01&data_transacao=lte.${ano}-${mes}-${ultimoDia}`;
+            }
+            
+            try {
+                const response = await fetch(url, {
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) throw new Error('Erro ao carregar transações');
+                
+                const transacoes = await response.json();
+                const tbody = document.getElementById('transacoesBody');
+                tbody.innerHTML = '';
+                
+                if (transacoes.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--gray);">Nenhuma transação encontrada</td></tr>';
+                    return;
+                }
+                
+                transacoes.forEach(transacao => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${formatarData(transacao.data_transacao)}</td>
+                        <td title="${transacao.descricao}">${transacao.descricao.length > 15 ? transacao.descricao.substring(0, 15) + '...' : transacao.descricao}</td>
+                        <td>${transacao.categoria}</td>
+                        <td class="${transacao.tipo}">R$ ${parseFloat(transacao.valor).toFixed(2)}</td>
+                        <td>${transacao.tipo === 'receita' ? 'Receita' : 'Despesa'}</td>
+                        <td class="action-buttons">
+                            <button onclick="excluirTransacao('${transacao.id}')" class="btn btn-danger btn-xs" title="Excluir transação">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+                
+            } catch (error) {
+                console.error('Erro:', error);
+            }
+        }
+
+        // NOVA FUNÇÃO: Carregar usuários com opções de administração
+        async function carregarUsuarios() {
+            if (!usuarioLogado || usuarioLogado.nivel_acesso !== 'admin') return;
+            
+            try {
+                const response = await fetch(
+                    `${SUPABASE_URL}/rest/v1/usuarios?select=*`,
+                    {
+                        headers: {
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                            'Content-Type': 'application/json'
+                        }
+                    }
+                );
+                
+                const usuarios = await response.json();
+                const tbody = document.getElementById('usuariosBody');
+                tbody.innerHTML = '';
+                
+                usuarios.forEach(usuario => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${usuario.nome}</td>
+                        <td>${usuario.email}</td>
+                        <td>${usuario.nivel_acesso}</td>
+                        <td>${usuario.ativo ? 'Ativo' : 'Inativo'}</td>
+                        <td class="action-buttons">
+                            <button onclick="resetarSenha('${usuario.id}')" class="btn btn-info btn-xs" title="Resetar Senha">
+                                <i class="fas fa-key"></i>
+                            </button>
+                            <button onclick="toggleStatusUsuario('${usuario.id}', ${!usuario.ativo})" 
+                                    class="btn ${usuario.ativo ? 'btn-warning' : 'btn-success'} btn-xs"
+                                    title="${usuario.ativo ? 'Desativar' : 'Ativar'}">
+                                <i class="fas ${usuario.ativo ? 'fa-pause' : 'fa-play'}"></i>
+                            </button>
+                            <button onclick="excluirUsuario('${usuario.id}')" class="btn btn-danger btn-xs" title="Excluir">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+                
+            } catch (error) {
+                console.error('Erro:', error);
+            }
+        }
+
+        // NOVAS FUNÇÕES PARA ADMIN
+        async function resetarSenha(usuarioId) {
+            const novaSenha = prompt('Digite a nova senha para o usuário:');
+            if (novaSenha && novaSenha.length >= 4) {
+                try {
+                    const response = await fetch(`${SUPABASE_URL}/rest/v1/usuarios?id=eq.${usuarioId}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ senha: novaSenha })
+                    });
+                    
+                    if (response.ok) {
+                        showAlert('Senha resetada com sucesso!', 'success');
+                    } else {
+                        throw new Error('Erro ao resetar senha');
+                    }
+                } catch (error) {
+                    showAlert('Erro ao resetar senha', 'danger');
+                }
+            } else if (novaSenha !== null) {
+                showAlert('A senha deve ter pelo menos 4 caracteres', 'warning');
+            }
+        }
+
+        async function toggleStatusUsuario(usuarioId, novoStatus) {
+            if (confirm(`Tem certeza que deseja ${novoStatus ? 'ativar' : 'desativar'} este usuário?`)) {
+                try {
+                    const response = await fetch(`${SUPABASE_URL}/rest/v1/usuarios?id=eq.${usuarioId}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ ativo: novoStatus })
+                    });
+                    
+                    if (response.ok) {
+                        carregarUsuarios();
+                        showAlert(`Usuário ${novoStatus ? 'ativado' : 'desativado'} com sucesso!`, 'success');
+                    } else {
+                        throw new Error('Erro ao alterar status');
+                    }
+                } catch (error) {
+                    showAlert('Erro ao alterar status do usuário', 'danger');
+                }
+            }
+        }
+
+        async function excluirUsuario(usuarioId) {
+            if (confirm('Tem certeza que deseja excluir este usuário? Esta ação não pode ser desfeita.')) {
+                try {
+                    const response = await fetch(`${SUPABASE_URL}/rest/v1/usuarios?id=eq.${usuarioId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_KEY}`
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        carregarUsuarios();
+                        showAlert('Usuário excluído com sucesso!', 'success');
+                    } else {
+                        throw new Error('Erro ao excluir usuário');
+                    }
+                } catch (error) {
+                    showAlert('Erro ao excluir usuário', 'danger');
+                }
+            }
+        }
+
+        async function excluirTransacao(id) {
+            if (confirm('Tem certeza que deseja excluir esta transação?')) {
+                try {
+                    const response = await fetch(`${SUPABASE_URL}/rest/v1/transacoes?id=eq.${id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_KEY}`
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        carregarTransacoes();
+                        carregarDashboard();
+                        showAlert('Transação excluída com sucesso!', 'success');
+                    }
+                } catch (error) {
+                    showAlert('Erro ao excluir transação', 'danger');
+                }
+            }
+        }
+
+        // NOVA FUNÇÃO: Gerar relatório
+        async function gerarRelatorio() {
+            const mesRelatorio = document.getElementById('mesRelatorio').value;
+
+            if (!mesRelatorio) {
+                showAlert('Selecione um mês', 'warning');
+                return;
+            }
+
+            try {
+                const [ano, mes] = mesRelatorio.split('-');
+                const ultimoDia = new Date(ano, mes, 0).getDate();
+                
+                const response = await fetch(
+                    `${SUPABASE_URL}/rest/v1/transacoes?usuario_id=eq.${usuarioLogado.id}&data_transacao=gte.${ano}-${mes}-01&data_transacao=lte.${ano}-${mes}-${ultimoDia}&order=data_transacao.desc`,
+                    {
+                        headers: {
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                            'Content-Type': 'application/json'
+                        }
+                    }
+                );
+
+                if (!response.ok) throw new Error('Erro ao buscar transações');
+
+                const transacoes = await response.json();
+                exibirRelatorio(transacoes, mesRelatorio);
+                
+            } catch (error) {
+                console.error('Erro ao carregar relatório:', error);
+                showAlert('Erro ao carregar relatório', 'danger');
+            }
+        }
+
+        function exibirRelatorio(transacoes, mesRelatorio) {
+            const resultadoDiv = document.getElementById('relatorioResultado');
+            
+            let receitas = 0;
+            let despesas = 0;
+            
+            transacoes.forEach(t => {
+                if (t.tipo === 'receita') receitas += parseFloat(t.valor);
+                else despesas += parseFloat(t.valor);
+            });
+
+            const saldo = receitas - despesas;
+
+            let html = `
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">
+                            <i class="fas fa-chart-bar"></i> 
+                            Relatório: ${mesRelatorio}
+                        </h4>
+                        <span style="background: var(--primary); color: white; padding: 5px 10px; border-radius: 15px;">
+                            ${transacoes.length} transações
+                        </span>
+                    </div>
+                    <div class="summary-cards">
+                        <div class="summary-card receita">
+                            <h3>Total Receitas</h3>
+                            <div class="value receita">R$ ${receitas.toFixed(2)}</div>
+                        </div>
+                        <div class="summary-card despesa">
+                            <h3>Total Despesas</h3>
+                            <div class="value despesa">R$ ${despesas.toFixed(2)}</div>
+                        </div>
+                        <div class="summary-card">
+                            <h3>Saldo</h3>
+                            <div class="value ${saldo >= 0 ? 'saldo-positivo' : 'saldo-negativo'}">
+                                R$ ${saldo.toFixed(2)}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-container" style="margin-top: 20px;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Descrição</th>
+                                    <th>Categoria</th>
+                                    <th>Valor</th>
+                                    <th>Tipo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+            `;
+
+            if (transacoes.length === 0) {
+                html += `
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: var(--gray);">
+                            Nenhuma transação encontrada no período
+                        </td>
+                    </tr>
+                `;
+            } else {
+                transacoes.forEach(transacao => {
+                    html += `
+                        <tr>
+                            <td>${formatarData(transacao.data_transacao)}</td>
+                            <td>${transacao.descricao}</td>
+                            <td>${transacao.categoria}</td>
+                            <td class="${transacao.tipo}">R$ ${parseFloat(transacao.valor).toFixed(2)}</td>
+                            <td>${transacao.tipo === 'receita' ? 'Receita' : 'Despesa'}</td>
+                        </tr>
+                    `;
+                });
+            }
+
+            html += `
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="export-buttons">
+                        <button onclick="exportarParaExcel('${mesRelatorio}')" class="btn btn-success">
+                            <i class="fas fa-file-excel"></i> Exportar para Excel
+                        </button>
+                        <button onclick="exportarParaPDF('${mesRelatorio}')" class="btn btn-danger">
+                            <i class="fas fa-file-pdf"></i> Exportar para PDF
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            resultadoDiv.innerHTML = html;
+            resultadoDiv.style.display = 'block';
+        }
+
+        function exportarParaExcel(mesRelatorio) {
+            const tabela = document.querySelector('#relatorioResultado table');
+            const ws = XLSX.utils.table_to_sheet(tabela);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Relatório");
+            XLSX.writeFile(wb, `relatorio_${mesRelatorio}.xlsx`);
+            showAlert('Relatório exportado para Excel com sucesso!', 'success');
+        }
+
+        function exportarParaPDF(mesRelatorio) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Título
+            doc.setFontSize(18);
+            doc.text('Relatório Financeiro', 20, 20);
+            doc.setFontSize(12);
+            doc.text(`Período: ${mesRelatorio}`, 20, 30);
+            doc.text(`Emitido em: ${new Date().toLocaleDateString('pt-BR')}`, 20, 40);
+            
+            // Adicionar resumo
+            const receitas = document.querySelector('.summary-card.receita .value').textContent;
+            const despesas = document.querySelector('.summary-card.despesa .value').textContent;
+            const saldo = document.querySelector('.summary-card .value.saldo-positivo, .summary-card .value.saldo-negativo').textContent;
+            
+            doc.setFontSize(14);
+            doc.text('Resumo Financeiro', 20, 60);
+            doc.setFontSize(12);
+            doc.text(`Receitas: ${receitas}`, 20, 75);
+            doc.text(`Despesas: ${despesas}`, 20, 85);
+            doc.text(`Saldo: ${saldo}`, 20, 95);
+            
+            // Adicionar tabela de transações
+            let yPos = 115;
+            doc.setFontSize(14);
+            doc.text('Transações', 20, yPos);
+            yPos += 10;
+            
+            // Cabeçalho da tabela
+            doc.setFillColor(200, 200, 200);
+            doc.rect(20, yPos, 170, 10, 'F');
+            doc.setTextColor(0, 0, 0);
+            doc.setFontSize(10);
+            doc.text('Data', 22, yPos + 7);
+            doc.text('Descrição', 50, yPos + 7);
+            doc.text('Categoria', 100, yPos + 7);
+            doc.text('Valor', 140, yPos + 7);
+            doc.text('Tipo', 160, yPos + 7);
+            
+            yPos += 10;
+            
+            // Linhas da tabela
+            const linhas = document.querySelectorAll('#relatorioResultado table tbody tr');
+            linhas.forEach(linha => {
+                if (yPos > 270) { // Nova página se necessário
+                    doc.addPage();
+                    yPos = 20;
+                }
+                
+                const colunas = linha.querySelectorAll('td');
+                if (colunas.length === 5) {
+                    doc.text(colunas[0].textContent, 22, yPos + 7);
+                    doc.text(colunas[1].textContent.substring(0, 20), 50, yPos + 7);
+                    doc.text(colunas[2].textContent, 100, yPos + 7);
+                    doc.text(colunas[3].textContent, 140, yPos + 7);
+                    doc.text(colunas[4].textContent, 160, yPos + 7);
+                    yPos += 10;
+                }
+            });
+            
+            doc.save(`relatorio_${mesRelatorio}.pdf`);
+            showAlert('Relatório exportado para PDF com sucesso!', 'success');
+        }
+
+        function openTab(tabName) {
+            // Impedir que usuários comuns acessem a aba admin
+            if (tabName === 'admin' && (!usuarioLogado || usuarioLogado.nivel_acesso !== 'admin')) {
+                showAlert('Acesso negado. Apenas administradores podem acessar esta área.', 'warning');
+                return;
+            }
+            
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            event.currentTarget.classList.add('active');
+
+            // Fechar menu mobile após clicar em uma aba
+            if (window.innerWidth <= 768) {
+                toggleMobileMenu();
+            }
+        }
+
+        function logout() {
+            usuarioLogado = null;
+            document.getElementById('app').style.display = 'none';
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('loginForm').reset();
+            document.getElementById('loginMessage').style.display = 'none';
+        }
+
+        function showMessage(element, message, isSuccess) {
+            element.textContent = message;
+            element.className = `alert ${isSuccess ? 'alert-success' : 'alert-danger'}`;
+            element.style.display = 'block';
+        }
+
+        function showAlert(message, type) {
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            alert.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 1000; max-width: 300px;';
+            
+            document.body.appendChild(alert);
+            setTimeout(() => alert.remove(), 4000);
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            const hoje = new Date().toISOString().slice(0, 7);
+            document.getElementById('dataTransacao').value = new Date().toISOString().split('T')[0];
+            document.getElementById('filtroMes').value = hoje;
+            document.getElementById('mesRelatorio').value = hoje;
+            document.getElementById('filtroMesDashboard').value = hoje;
+            
+            // Carregar dados de login salvos
+            carregarDadosLogin();
+            
+            // Fechar menu mobile ao clicar fora
+            document.addEventListener('click', function(e) {
+                if (window.innerWidth <= 768 && !e.target.closest('.nav-tabs') && !e.target.closest('.mobile-menu-btn')) {
+                    document.getElementById('navTabs').classList.remove('mobile-open');
+                }
+            });
+        });
+
+        // Fechar menu mobile ao redimensionar a tela
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                document.getElementById('navTabs').classList.remove('mobile-open');
+            }
+        });
+    </script>
+</body>
+</html>
