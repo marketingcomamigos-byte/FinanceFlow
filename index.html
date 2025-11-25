@@ -571,6 +571,51 @@
             display: block;
         }
         
+        /* Estilos para a seção de cancelamento */
+        .cancelamento-info {
+            background: #fff3f3;
+            border-left: 4px solid var(--danger);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+        }
+        
+        .cancelamento-info h3 {
+            color: var(--danger);
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+        
+        .cancelamento-info ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .cancelamento-info li {
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+        }
+        
+        .btn-cancelamento {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-cancelamento:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+        }
+        
         /* Mobile Styles */
         @media (max-width: 768px) {
             body {
@@ -838,6 +883,9 @@
             </button>
             <button class="nav-tab" id="adminTab" style="display: none;" onclick="openTab('admin')">
                 <i class="fas fa-cog"></i> Administração
+            </button>
+            <button class="nav-tab" onclick="openTab('cancelamento')">
+                <i class="fas fa-times-circle"></i> Cancelamento
             </button>
         </div>
         
@@ -1175,6 +1223,51 @@
                 </div>
             </div>
         </div>
+
+        <!-- Nova Aba: Cancelamento -->
+        <div id="cancelamento" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-times-circle"></i> Cancelamento de Plano</h3>
+                </div>
+                
+                <div class="cancelamento-info">
+                    <h3><i class="fas fa-info-circle"></i> Informações Importantes</h3>
+                    <p>Ao solicitar o cancelamento do seu plano, esteja ciente das seguintes informações:</p>
+                    <ul>
+                        <li>Você pode solicitar o cancelamento do plano recorrente a qualquer momento</li>
+                        <li>O cancelamento será efetivado no final do período atual já pago</li>
+                        <li>Você continuará tendo acesso ao sistema até o final do período contratado</li>
+                        <li>Após o cancelamento, todos os seus dados serão mantidos por 30 dias</li>
+                        <li>Se desejar reativar sua conta posteriormente, entre em contato conosco</li>
+                        <li>Não haverá reembolso de valores já pagos referentes ao período atual</li>
+                    </ul>
+                </div>
+
+                <div class="cancelamento-info" style="background: #fff9f9; border-left-color: #e74c3c;">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Antes de Cancelar</h3>
+                    <p>Considere estas alternativas antes de prosseguir com o cancelamento:</p>
+                    <ul>
+                        <li>Verifique se há problemas técnicos que possam ser resolvidos</li>
+                        <li>Entre em contato com nosso suporte para esclarecer dúvidas</li>
+                        <li>Avalie a possibilidade de alterar para um plano mais básico</li>
+                        <li>Confirme se realmente não utilizará mais o sistema</li>
+                    </ul>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px; padding: 20px; border-top: 1px solid var(--border);">
+                    <p style="margin-bottom: 20px; font-size: 0.9rem; color: var(--gray);">
+                        Ao clicar no botão abaixo, você será direcionado para o WhatsApp para confirmar o cancelamento do seu plano.
+                    </p>
+                    <button class="btn-cancelamento" onclick="solicitarCancelamento()">
+                        <i class="fas fa-times-circle"></i> SOLICITAR CANCELAMENTO
+                    </button>
+                    <p style="margin-top: 15px; font-size: 0.75rem; color: var(--gray);">
+                        Esta ação abrirá o WhatsApp com uma mensagem pré-preparada para nosso atendimento
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
     
     <!-- Botão flutuante para nova transação (só aparece após o login) -->
@@ -1213,6 +1306,31 @@
                     parcelamentoLabel.textContent = 'Duração (meses)';
                 }
             }
+        }
+
+        // Função para solicitar cancelamento
+        function solicitarCancelamento() {
+            if (!usuarioLogado) {
+                showAlert('Você precisa estar logado para solicitar cancelamento', 'warning');
+                return;
+            }
+
+            const nomeCompleto = usuarioLogado.nome;
+            const emailUsuario = usuarioLogado.email;
+            
+            // Formatar a mensagem para o WhatsApp
+            const mensagem = `Olá, gostaria de solicitar cancelamento do plano recorrente de uso do sistema _*FinancialControl*_. *${nomeCompleto}*/*${emailUsuario}*`;
+            
+            // Codificar a mensagem para URL
+            const mensagemCodificada = encodeURIComponent(mensagem);
+            
+            // Montar o link do WhatsApp
+            const linkWhatsApp = `https://wa.me/5544998213672?text=${mensagemCodificada}`;
+            
+            // Abrir o WhatsApp em uma nova aba
+            window.open(linkWhatsApp, '_blank');
+            
+            showAlert('Você está sendo direcionado para o WhatsApp para confirmar o cancelamento', 'info');
         }
 
         // Função para salvar dados de login no localStorage
