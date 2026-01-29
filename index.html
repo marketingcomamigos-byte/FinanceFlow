@@ -950,32 +950,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Últimas Transações no Dashboard -->
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title"><i class="fas fa-history"></i> Últimas Transações</h3>
-                </div>
-                <div class="table-container">
-                    <table class="transactions-table">
-                        <thead>
-                            <tr>
-                                <th>Data</th>
-                                <th>Descrição</th>
-                                <th>Valor</th>
-                                <th>Tipo</th>
-                            </tr>
-                        </thead>
-                        <tbody id="ultimasTransacoesBody">
-                            <tr>
-                                <td colspan="4" style="text-align: center; color: var(--gray);">
-                                    Nenhuma transação encontrada
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
         </div>
         
         <!-- Transações -->
@@ -1319,13 +1293,13 @@
             const emailUsuario = usuarioLogado.email;
             
             // Formatar a mensagem para o WhatsApp
-            const mensagem = `Olá, gostaria de solicitar cancelamento do plano recorrente de uso do sistema _*FinancialControl*_. *${nomeCompleto}*/*${emailUsuario}*`;
+            const mensagem = `Olá, gostaria de solicitar cancelamento do plano recorrente de uso do sistema Financial control. Em seguida coloque em *negrito* para whatsapp o *${nomeCompleto}* e o *${emailUsuario}*`;
             
             // Codificar a mensagem para URL
             const mensagemCodificada = encodeURIComponent(mensagem);
             
             // Montar o link do WhatsApp
-            const linkWhatsApp = `https://wa.me/5544997311635?text=${mensagemCodificada}`;
+            const linkWhatsApp = `https://wa.me/5544998213672?text=${mensagemCodificada}`;
             
             // Abrir o WhatsApp em uma nova aba
             window.open(linkWhatsApp, '_blank');
@@ -1447,112 +1421,78 @@
                 const [ano, mes] = mesAtual.split('-');
                 const ultimoDia = new Date(ano, mes, 0).getDate();
                 
-                // Buscar transações do mês selecionado
-                const response = await fetch(
-                    `${SUPABASE_URL}/rest/v1/transacoes?usuario_id=eq.${usuarioLogado.id}&data_transacao=gte.${ano}-${mes}-01&data_transacao=lte.${ano}-${mes}-${ultimoDia}`,
-                    {
-                        headers: {
-                            'apikey': SUPABASE_KEY,
-                            'Authorization': `Bearer ${SUPABASE_KEY}`,
-                            'Content-Type': 'application/json'
-                        }
-                    }
-                );
+                // Buscar transações ATÉ o mês atual (incluindo mês selecionado)
+                let url = `${SUPABASE_URL}/rest/v1/transacoes?usuario_id=eq.${usuarioLogado.id}&order=data_transacao.desc`;
                 
-                if (!response.ok) throw new Error('Erro ao carregar dashboard');
-                
-                const transacoes = await response.json();
-                
-                let receitas = 0;
-                let despesas = 0;
-                
-                transacoes.forEach(t => {
-                    if (t.tipo === 'receita') {
-                        receitas += parseFloat(t.valor);
-                    } else {
-                        despesas += parseFloat(t.valor);
+                const response = await fetch(url, {
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json'
                     }
                 });
                 
-                // Calcular saldo acumulado (incluindo meses anteriores)
-                const saldoAnterior = await calcularSaldoAcumulado(ano, mes);
-                const saldoAtual = saldoAnterior + receitas - despesas;
-                const saldoMensal = receitas - despesas;
+                if (!response.ok) throw new Error('Erro ao carregar dashboard');
+                
+                const todasTransacoes = await response.json();
+                
+                // 1. Filtrar transações APENAS do mês selecionado (sem parcelas futuras)
+                const transacoesMes = todasTransacoes.filter(t => {
+                    const dataTransacao = new Date(t.data_transacao);
+                    const anoTransacao = dataTransacao.getFullYear();
+                    const mesTransacao = dataTransacao.getMonth() + 1;
+                    
+                    // Apenas transações deste mês específico
+                    return anoTransacao == ano && mesTransacao == mes;
+                });
+                
+                // 2. Para saldo acumulado: transações até o mês selecionado (incluindo este mês)
+                const transacoesAteMes = todasTransacoes.filter(t => {
+                    const dataTransacao = new Date(t.data_transacao);
+                    const dataMes = new Date(ano, mes - 1, 1); // Primeiro dia do mês selecionado
+                    
+                    // Transações até o último dia do mês selecionado
+                    return dataTransacao <= new Date(ano, mes, 0);
+                });
+                
+                let receitasMes = 0;
+                let despesasMes = 0;
+                
+                transacoesMes.forEach(t => {
+                    if (t.tipo === 'receita') {
+                        receitasMes += parseFloat(t.valor);
+                    } else {
+                        despesasMes += parseFloat(t.valor);
+                    }
+                });
+                
+                // Calcular saldo acumulado (transações até o mês selecionado)
+                let saldoAcumulado = 0;
+                transacoesAteMes.forEach(t => {
+                    if (t.tipo === 'receita') {
+                        saldoAcumulado += parseFloat(t.valor);
+                    } else {
+                        saldoAcumulado -= parseFloat(t.valor);
+                    }
+                });
+                
+                const saldoMensal = receitasMes - despesasMes;
                 
                 // Atualizar os cards do dashboard
-                document.getElementById('receitasMes').textContent = `R$ ${receitas.toFixed(2)}`;
-                document.getElementById('despesasMes').textContent = `R$ ${despesas.toFixed(2)}`;
+                document.getElementById('receitasMes').textContent = `R$ ${receitasMes.toFixed(2)}`;
+                document.getElementById('despesasMes').textContent = `R$ ${despesasMes.toFixed(2)}`;
                 document.getElementById('saldoMes').textContent = `R$ ${saldoMensal.toFixed(2)}`;
                 document.getElementById('saldoMes').className = `value ${saldoMensal >= 0 ? 'saldo-positivo' : 'saldo-negativo'}`;
                 
-                document.getElementById('saldoAcumulado').textContent = `R$ ${saldoAtual.toFixed(2)}`;
-                document.getElementById('saldoAcumulado').className = `value ${saldoAtual >= 0 ? 'saldo-positivo' : 'saldo-negativo'}`;
+                document.getElementById('saldoAcumulado').textContent = `R$ ${saldoAcumulado.toFixed(2)}`;
+                document.getElementById('saldoAcumulado').className = `value ${saldoAcumulado >= 0 ? 'saldo-positivo' : 'saldo-negativo'}`;
                 
-                // Carregar últimas 5 transações para o dashboard
-                const ultimasTransacoes = transacoes.slice(0, 5);
-                const tbody = document.getElementById('ultimasTransacoesBody');
-                tbody.innerHTML = '';
-                
-                if (ultimasTransacoes.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--gray);">Nenhuma transação encontrada</td></tr>';
-                } else {
-                    ultimasTransacoes.forEach(transacao => {
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td>${formatarData(transacao.data_transacao)}</td>
-                            <td>${transacao.descricao}</td>
-                            <td class="${transacao.tipo}">R$ ${parseFloat(transacao.valor).toFixed(2)}</td>
-                            <td>${transacao.tipo === 'receita' ? 'Receita' : 'Despesa'}</td>
-                        `;
-                        tbody.appendChild(tr);
-                    });
-                }
-                
-                // Atualizar gráficos
-                atualizarGraficoPizza(transacoes);
+                // Atualizar gráficos apenas com transações do mês
+                atualizarGraficoPizza(transacoesMes);
                 atualizarGraficoLinha();
                 
             } catch (error) {
                 console.error('Erro ao carregar dashboard:', error);
-            }
-        }
-
-        // Função para calcular saldo acumulado até o mês anterior
-        async function calcularSaldoAcumulado(ano, mes) {
-            try {
-                // Buscar todas as transações até o mês anterior
-                const mesAnterior = new Date(ano, parseInt(mes) - 1, 0);
-                const anoAnterior = mesAnterior.getFullYear();
-                const mesAnteriorNum = String(mesAnterior.getMonth() + 1).padStart(2, '0');
-                
-                const response = await fetch(
-                    `${SUPABASE_URL}/rest/v1/transacoes?usuario_id=eq.${usuarioLogado.id}&data_transacao=lte.${anoAnterior}-${mesAnteriorNum}-31`,
-                    {
-                        headers: {
-                            'apikey': SUPABASE_KEY,
-                            'Authorization': `Bearer ${SUPABASE_KEY}`,
-                            'Content-Type': 'application/json'
-                        }
-                    }
-                );
-                
-                if (!response.ok) return 0;
-                
-                const transacoes = await response.json();
-                
-                let saldo = 0;
-                transacoes.forEach(t => {
-                    if (t.tipo === 'receita') {
-                        saldo += parseFloat(t.valor);
-                    } else {
-                        saldo -= parseFloat(t.valor);
-                    }
-                });
-                
-                return saldo;
-            } catch (error) {
-                console.error('Erro ao calcular saldo acumulado:', error);
-                return 0;
             }
         }
 
@@ -1645,7 +1585,7 @@
                 seisMesesAtras.setMonth(hoje.getMonth() - 5);
                 
                 const response = await fetch(
-                    `${SUPABASE_URL}/rest/v1/transacoes?usuario_id=eq.${usuarioLogado.id}&data_transacao=gte.${seisMesesAtras.toISOString().slice(0, 10)}&order=data_transacao.asc`,
+                    `${SUPABASE_URL}/rest/v1/transacoes?usuario_id=eq.${usuarioLogado.id}&data_transacao=gte.${seisMesesAtras.toISOString().slice(0, 10)}&data_transacao=lte.${hoje.toISOString().slice(0, 10)}&order=data_transacao.asc`,
                     {
                         headers: {
                             'apikey': SUPABASE_KEY,
@@ -1928,13 +1868,10 @@
             if (!usuarioLogado) return;
             
             const mesFiltro = document.getElementById('filtroMes').value;
-            let url = `${SUPABASE_URL}/rest/v1/transacoes?usuario_id=eq.${usuarioLogado.id}&order=data_transacao.desc`;
+            const tbody = document.getElementById('transacoesBody');
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--gray);">Carregando transações...</td></tr>';
             
-            if (mesFiltro) {
-                const [ano, mes] = mesFiltro.split('-');
-                const ultimoDia = new Date(ano, mes, 0).getDate();
-                url += `&data_transacao=gte.${ano}-${mes}-01&data_transacao=lte.${ano}-${mes}-${ultimoDia}`;
-            }
+            let url = `${SUPABASE_URL}/rest/v1/transacoes?usuario_id=eq.${usuarioLogado.id}&order=data_transacao.desc`;
             
             try {
                 const response = await fetch(url, {
@@ -1947,35 +1884,59 @@
                 
                 if (!response.ok) throw new Error('Erro ao carregar transações');
                 
-                const transacoes = await response.json();
-                const tbody = document.getElementById('transacoesBody');
-                tbody.innerHTML = '';
+                const todasTransacoes = await response.json();
                 
-                if (transacoes.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--gray);">Nenhuma transação encontrada</td></tr>';
-                    return;
+                // Filtrar transações baseado no mês selecionado
+                let transacoesFiltradas = todasTransacoes;
+                
+                if (mesFiltro) {
+                    const [anoFiltro, mesFiltroNum] = mesFiltro.split('-');
+                    
+                    // FILTRO CORRIGIDO: Apenas transações do mês selecionado
+                    transacoesFiltradas = todasTransacoes.filter(transacao => {
+                        const dataTransacao = new Date(transacao.data_transacao);
+                        const anoTransacao = dataTransacao.getFullYear();
+                        const mesTransacao = dataTransacao.getMonth() + 1;
+                        
+                        // Apenas transações deste mês específico (SEM parcelas futuras)
+                        return anoTransacao == anoFiltro && mesTransacao == mesFiltroNum;
+                    });
                 }
                 
-                transacoes.forEach(transacao => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${formatarData(transacao.data_transacao)}</td>
-                        <td title="${transacao.descricao}">${transacao.descricao.length > 15 ? transacao.descricao.substring(0, 15) + '...' : transacao.descricao}</td>
-                        <td>${transacao.categoria}</td>
-                        <td class="${transacao.tipo}">R$ ${parseFloat(transacao.valor).toFixed(2)}</td>
-                        <td>${transacao.tipo === 'receita' ? 'Receita' : 'Despesa'}</td>
-                        <td class="action-buttons">
-                            <button onclick="excluirTransacao('${transacao.id}')" class="btn btn-danger btn-xs" title="Excluir transação">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
+                renderizarTransacoes(transacoesFiltradas);
                 
             } catch (error) {
                 console.error('Erro:', error);
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--gray);">Erro ao carregar transações</td></tr>';
             }
+        }
+
+        // Função para renderizar transações na tabela
+        function renderizarTransacoes(transacoes) {
+            const tbody = document.getElementById('transacoesBody');
+            tbody.innerHTML = '';
+            
+            if (transacoes.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--gray);">Nenhuma transação encontrada</td></tr>';
+                return;
+            }
+            
+            transacoes.forEach(transacao => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${formatarData(transacao.data_transacao)}</td>
+                    <td title="${transacao.descricao}">${transacao.descricao.length > 15 ? transacao.descricao.substring(0, 15) + '...' : transacao.descricao}</td>
+                    <td>${transacao.categoria}</td>
+                    <td class="${transacao.tipo}">R$ ${parseFloat(transacao.valor).toFixed(2)}</td>
+                    <td>${transacao.tipo === 'receita' ? 'Receita' : 'Despesa'}</td>
+                    <td class="action-buttons">
+                        <button onclick="excluirTransacao('${transacao.id}')" class="btn btn-danger btn-xs" title="Excluir transação">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
         }
 
         // NOVA FUNÇÃO: Carregar usuários com opções de administração
@@ -2139,7 +2100,7 @@
                 const ultimoDia = new Date(ano, mes, 0).getDate();
                 
                 const response = await fetch(
-                    `${SUPABASE_URL}/rest/v1/transacoes?usuario_id=eq.${usuarioLogado.id}&data_transacao=gte.${ano}-${mes}-01&data_transacao=lte.${ano}-${mes}-${ultimoDia}&order=data_transacao.desc`,
+                    `${SUPABASE_URL}/rest/v1/transacoes?usuario_id=eq.${usuarioLogado.id}&order=data_transacao.desc`,
                     {
                         headers: {
                             'apikey': SUPABASE_KEY,
@@ -2151,7 +2112,18 @@
 
                 if (!response.ok) throw new Error('Erro ao buscar transações');
 
-                const transacoes = await response.json();
+                const todasTransacoes = await response.json();
+                
+                // FILTRO CORRIGIDO: Apenas transações do mês selecionado
+                const transacoes = todasTransacoes.filter(t => {
+                    const dataTransacao = new Date(t.data_transacao);
+                    const anoTransacao = dataTransacao.getFullYear();
+                    const mesTransacao = dataTransacao.getMonth() + 1;
+                    
+                    // Apenas transações deste mês específico (SEM parcelas futuras)
+                    return anoTransacao == ano && mesTransacao == mes;
+                });
+                
                 exibirRelatorio(transacoes, mesRelatorio);
                 
             } catch (error) {
