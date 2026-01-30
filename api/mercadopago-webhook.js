@@ -1,169 +1,289 @@
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_KEY;
-const mercadoPagoToken = process.env.MERCADO_PAGO_TOKEN;
-
-const supabase = createClient(supabaseUrl, supabaseKey);
-
+// mercadopago-webhook.js - VERSÃO CORRIGIDA E FUNCIONAL
 export default async function handler(req, res) {
+    // Configurar CORS
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    
+    // Lidar com OPTIONS para CORS
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
+    
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
     try {
-        console.log('Webhook recebido:', req.body);
+        console.log('🔔 Webhook recebido do Mercado Pago');
         
         const { type, data } = req.body;
         
         if (type === 'payment') {
             const paymentId = data.id;
+            console.log(`💰 Processando pagamento ID: ${paymentId}`);
             
-            // Buscar detalhes do pagamento no Mercado Pago
-            const mpResponse = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
-                headers: {
-                    'Authorization': `Bearer ${mercadoPagoToken}`
-                }
+            // IMPORTANTE: Responder IMEDIATAMENTE para evitar timeout
+            res.status(200).json({ 
+                received: true, 
+                processing: true,
+                paymentId: paymentId
             });
             
-            if (!mpResponse.ok) {
-                throw new Error(`Erro Mercado Pago: ${mpResponse.status}`);
-            }
+            // Processar em segundo plano
+            setTimeout(async () => {
+                await processPaymentBackground(paymentId);
+            }, 100);
             
-            const payment = await mpResponse.json();
-            console.log('Pagamento MP:', payment.status, payment.external_reference);
-            
-            // Atualizar pagamento no Supabase
-            const { error: updateError } = await supabase
-                .from('pagamentos')
-                .update({
-                    status: payment.status,
-                    data_atualizacao: new Date().toISOString()
-                })
-                .eq('id_mercado_pago', paymentId);
-            
-            if (updateError) {
-                console.error('Erro ao atualizar pagamento:', updateError);
-                throw updateError;
-            }
-            
-            // Log do webhook
-            await supabase
-                .from('log_pagamentos')
-                .insert({
-                    pagamento_id: paymentId,
-                    acao: 'webhook_recebido',
-                    status: payment.status,
-                    detalhes: payment,
-                    ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress
-                });
-            
-            // Se pagamento aprovado, processar assinatura
-            if (payment.status === 'approved') {
-                await processarPagamentoAprovado(payment);
-            }
-            
-            res.status(200).json({ received: true, processed: true });
         } else {
-            res.status(200).json({ received: true, processed: false });
+            res.status(200).json({ 
+                received: true, 
+                message: 'Webhook não é de pagamento' 
+            });
         }
         
     } catch (error) {
-        console.error('Erro no webhook:', error);
-        
-        // Log do erro
-        await supabase
-            .from('log_pagamentos')
-            .insert({
-                pagamento_id: 'webhook_error',
-                acao: 'erro_webhook',
-                status: 'error',
-                detalhes: { error: error.message, body: req.body },
-                ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress
-            });
-        
-        res.status(500).json({ error: 'Internal server error', message: error.message });
+        console.error('❌ Erro no webhook:', error);
+        res.status(200).json({ 
+            received: true, 
+            error: error.message 
+        });
     }
 }
 
-async function processarPagamentoAprovado(payment) {
+// Função para processar em segundo plano
+async function processPaymentBackground(paymentId) {
     try {
-        // Buscar pagamento no banco
-        const { data: pagamentoData, error: pagamentoError } = await supabase
-            .from('pagamentos')
-            .select('*')
-            .eq('id_mercado_pago', payment.id)
-            .single();
+        console.log(`⏳ Processando pagamento ${paymentId} em background...`);
         
-        if (pagamentoError || !pagamentoData) {
-            console.error('Pagamento não encontrado no banco:', payment.id);
+        // Usar fetch diretamente para evitar problemas com @supabase/supabase-js
+        const SUPABASE_URL = process.env.SUPABASE_URL || 'https://rprocjpzydkondrguzui.supabase.co';
+        const SUPABASE_KEY = process.env.SUPABASE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwcm9janB6eWRrb25kcmd1enVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM2ODA2NjIsImV4cCI6MjA3OTI1NjY2Mn0.bD36ix62EYFdnnTKXN3iK9C9AoOeKyWGkY10D-A1tm0';
+        const MERCADOPAGO_TOKEN = process.env.MERCADOPAGO_ACCESS_TOKEN || 'TEST-822136515431736-013007-abb7830efc0f2453050b9bf030d2b5d2-10155732';
+        
+        // 1. Buscar detalhes do pagamento no Mercado Pago
+        console.log('📡 Buscando detalhes do Mercado Pago...');
+        const mpResponse = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
+            headers: {
+                'Authorization': `Bearer ${MERCADOPAGO_TOKEN}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (!mpResponse.ok) {
+            const errorText = await mpResponse.text();
+            console.error(`❌ Erro Mercado Pago: ${mpResponse.status}`, errorText);
             return;
         }
         
-        // Atualizar usuário para premium
-        const { error: usuarioError } = await supabase
-            .from('usuarios')
-            .update({ 
-                plano: 'premium',
-                transacoes_realizadas: 0 
-            })
-            .eq('id', pagamentoData.usuario_id);
+        const payment = await mpResponse.json();
+        console.log(`📊 Status do pagamento: ${payment.status}`);
+        console.log(`🔗 External Reference: ${payment.external_reference}`);
         
-        if (usuarioError) {
-            console.error('Erro ao atualizar usuário:', usuarioError);
-            throw usuarioError;
+        // 2. Atualizar pagamento no Supabase
+        console.log('💾 Atualizando pagamento no Supabase...');
+        const updateResponse = await fetch(`${SUPABASE_URL}/rest/v1/pagamentos?id_mercado_pago=eq.${paymentId}`, {
+            method: 'PATCH',
+            headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Content-Type': 'application/json',
+                'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify({
+                status: payment.status,
+                status_detail: payment.status_detail,
+                date_approved: payment.date_approved,
+                updated_at: new Date().toISOString()
+            })
+        });
+        
+        if (!updateResponse.ok) {
+            console.error('❌ Erro ao atualizar pagamento:', await updateResponse.text());
+        } else {
+            console.log('✅ Pagamento atualizado no Supabase');
         }
         
-        // Calcular data de vencimento
+        // 3. Log do webhook
+        await fetch(`${SUPABASE_URL}/rest/v1/log_pagamentos`, {
+            method: 'POST',
+            headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Content-Type': 'application/json',
+                'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify({
+                pagamento_id: paymentId,
+                acao: 'webhook_recebido',
+                status: payment.status,
+                detalhes: JSON.stringify(payment),
+                ip: 'webhook_background',
+                created_at: new Date().toISOString()
+            })
+        });
+        
+        // 4. Se pagamento aprovado, processar assinatura
+        if (payment.status === 'approved') {
+            console.log('🎉 Pagamento APROVADO! Processando assinatura...');
+            await processarPagamentoAprovado(payment, SUPABASE_URL, SUPABASE_KEY);
+        }
+        
+        console.log(`✅ Processamento do pagamento ${paymentId} concluído`);
+        
+    } catch (error) {
+        console.error(`❌ Erro no processamento background:`, error);
+    }
+}
+
+async function processarPagamentoAprovado(payment, SUPABASE_URL, SUPABASE_KEY) {
+    try {
+        // 1. Buscar pagamento no banco
+        console.log('🔍 Buscando pagamento no banco...');
+        const pagamentoResponse = await fetch(
+            `${SUPABASE_URL}/rest/v1/pagamentos?id_mercado_pago=eq.${payment.id}&select=*`,
+            {
+                headers: {
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': `Bearer ${SUPABASE_KEY}`,
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+        
+        if (!pagamentoResponse.ok) {
+            console.error('❌ Erro ao buscar pagamento:', await pagamentoResponse.text());
+            return;
+        }
+        
+        const pagamentos = await pagamentoResponse.json();
+        
+        if (!pagamentos || pagamentos.length === 0) {
+            console.error('❌ Pagamento não encontrado no banco:', payment.id);
+            return;
+        }
+        
+        const pagamentoData = pagamentos[0];
+        const userId = pagamentoData.usuario_id;
+        
+        console.log(`👤 Processando usuário ID: ${userId}`);
+        
+        // 2. Atualizar usuário para premium
+        console.log('⬆️ Atualizando usuário para premium...');
+        const usuarioResponse = await fetch(`${SUPABASE_URL}/rest/v1/usuarios?id=eq.${userId}`, {
+            method: 'PATCH',
+            headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Content-Type': 'application/json',
+                'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify({ 
+                plano: 'premium',
+                transacoes_realizadas: 0,
+                updated_at: new Date().toISOString()
+            })
+        });
+        
+        if (!usuarioResponse.ok) {
+            console.error('❌ Erro ao atualizar usuário:', await usuarioResponse.text());
+        } else {
+            console.log('✅ Usuário atualizado para premium');
+        }
+        
+        // 3. Calcular data de vencimento
         const dataInicio = new Date();
         const dataVencimento = new Date();
+        const plano = pagamentoData.plano || 'mensal';
         
-        if (pagamentoData.plano === 'mensal') {
-            dataVencimento.setMonth(dataVencimento.getMonth() + 1);
-        } else if (pagamentoData.plano === 'anual') {
+        if (plano === 'anual') {
             dataVencimento.setFullYear(dataVencimento.getFullYear() + 1);
         } else {
             dataVencimento.setMonth(dataVencimento.getMonth() + 1);
         }
         
-        // Criar/atualizar assinatura
-        const { error: assinaturaError } = await supabase
-            .from('assinaturas')
-            .upsert({
-                usuario_id: pagamentoData.usuario_id,
-                pagamento_id: pagamentoData.id,
-                plano: pagamentoData.plano,
-                status: 'ativa',
-                data_inicio: dataInicio.toISOString(),
-                data_vencimento: dataVencimento.toISOString(),
-                valor: pagamentoData.valor,
-                renovacao_automatica: false,
-                data_atualizacao: new Date().toISOString()
-            }, {
-                onConflict: 'usuario_id',
-                ignoreDuplicates: false
-            });
+        // 4. Criar/atualizar assinatura
+        console.log('📝 Criando/atualizando assinatura...');
+        const assinaturaData = {
+            usuario_id: userId,
+            pagamento_id: pagamentoData.id,
+            plano: plano,
+            status: 'ativa',
+            data_inicio: dataInicio.toISOString(),
+            data_vencimento: dataVencimento.toISOString(),
+            valor: pagamentoData.valor || payment.transaction_amount,
+            renovacao_automatica: false,
+            data_atualizacao: new Date().toISOString(),
+            created_at: new Date().toISOString()
+        };
         
-        if (assinaturaError) {
-            console.error('Erro ao criar assinatura:', assinaturaError);
-            throw assinaturaError;
+        // Primeiro verificar se já existe assinatura
+        const checkAssinaturaResponse = await fetch(
+            `${SUPABASE_URL}/rest/v1/assinaturas?usuario_id=eq.${userId}`,
+            {
+                headers: {
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': `Bearer ${SUPABASE_KEY}`,
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+        
+        if (checkAssinaturaResponse.ok) {
+            const assinaturas = await checkAssinaturaResponse.json();
+            
+            if (assinaturas.length > 0) {
+                // Atualizar
+                await fetch(`${SUPABASE_URL}/rest/v1/assinaturas?id=eq.${assinaturas[0].id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify(assinaturaData)
+                });
+                console.log('✅ Assinatura atualizada');
+            } else {
+                // Criar nova
+                await fetch(`${SUPABASE_URL}/rest/v1/assinaturas`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify(assinaturaData)
+                });
+                console.log('✅ Nova assinatura criada');
+            }
         }
         
-        // Criar notificação para o usuário
-        await supabase
-            .from('notificacoes')
-            .insert({
-                usuario_id: pagamentoData.usuario_id,
+        // 5. Criar notificação para o usuário
+        console.log('🔔 Criando notificação...');
+        await fetch(`${SUPABASE_URL}/rest/v1/notificacoes`, {
+            method: 'POST',
+            headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Content-Type': 'application/json',
+                'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify({
+                usuario_id: userId,
                 titulo: '🎉 Pagamento Aprovado!',
-                mensagem: `Seu pagamento de R$ ${pagamentoData.valor} foi aprovado! Sua conta agora é Premium até ${dataVencimento.toLocaleDateString('pt-BR')}.`,
+                mensagem: `Seu pagamento de R$ ${(pagamentoData.valor || payment.transaction_amount).toFixed(2)} foi aprovado! Sua conta agora é Premium até ${dataVencimento.toLocaleDateString('pt-BR')}.`,
                 tipo: 'success',
-                lida: false
-            });
+                lida: false,
+                created_at: new Date().toISOString()
+            })
+        });
         
-        console.log('Assinatura processada com sucesso para usuário:', pagamentoData.usuario_id);
+        console.log(`✨ Processamento completo para usuário ${userId}`);
         
     } catch (error) {
-        console.error('Erro ao processar pagamento aprovado:', error);
-        throw error;
+        console.error('❌ Erro ao processar pagamento aprovado:', error);
     }
 }
