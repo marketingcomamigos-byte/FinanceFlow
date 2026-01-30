@@ -59,7 +59,7 @@ async function processPaymentBackground(paymentId) {
         // Usar fetch diretamente para evitar problemas com @supabase/supabase-js
         const SUPABASE_URL = process.env.SUPABASE_URL || 'https://rprocjpzydkondrguzui.supabase.co';
         const SUPABASE_KEY = process.env.SUPABASE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwcm9janB6eWRrb25kcmd1enVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM2ODA2NjIsImV4cCI6MjA3OTI1NjY2Mn0.bD36ix62EYFdnnTKXN3iK9C9AoOeKyWGkY10D-A1tm0';
-        const MERCADOPAGO_TOKEN = process.env.MERCADOPAGO_ACCESS_TOKEN || 'TEST-822136515431736-013007-abb7830efc0f2453050b9bf030d2b5d2-10155732';
+        const MERCADOPAGO_TOKEN = process.env.MERCADOPAGO_ACCESS_TOKEN || 'APP_USR-822136515431736-013007-7ed1586544474bff3bca6037cea26d1a-10155732';
         
         // 1. Buscar detalhes do pagamento no Mercado Pago
         console.log('📡 Buscando detalhes do Mercado Pago...');
