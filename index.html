@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinancialControl - Sistema Completo com Mercado Pago</title>
+    <title>FinancialControl - Sistema de Controle Financeiro</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
@@ -23,7 +22,7 @@
             --gray: #6c757d;
             --border: #e9ecef;
             --demo: #ffc107;
-            --premium: #4361ee;
+            --premium: #28a745;
             --pix: #32BCAD;
         }
         
@@ -662,225 +661,59 @@
             background: linear-gradient(135deg, #f8f9ff 0%, #eef0ff 100%);
         }
         
-        .pix-payment-container {
-            text-align: center;
-            padding: 20px;
-            background: linear-gradient(135deg, #f8fff9 0%, #e8f5e9 100%);
-            border-radius: 10px;
-            border: 2px solid var(--pix);
-            margin: 20px 0;
-        }
-        
-        .qrcode-container {
-            margin: 20px auto;
-            padding: 20px;
-            background: white;
-            border-radius: 10px;
-            display: inline-block;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        
-        #qrcode {
-            margin: 0 auto;
-        }
-        
-        .pix-code {
-            background: #f8f9fa;
-            border: 2px dashed #32BCAD;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-            font-family: monospace;
-            word-break: break-all;
-            font-size: 0.9rem;
-        }
-        
-        .copy-btn {
-            background: var(--pix);
+        .whatsapp-button {
+            background: #25D366;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 12px 20px;
             border-radius: 6px;
             cursor: pointer;
             font-weight: 600;
-            margin-top: 10px;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-        }
-        
-        .copy-btn:hover {
-            background: #2aa89a;
-        }
-        
-        .payment-status {
-            padding: 15px;
-            border-radius: 8px;
-            margin: 20px 0;
-            text-align: center;
-            font-weight: 600;
-        }
-        
-        .payment-status.pending {
-            background: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeaa7;
-        }
-        
-        .payment-status.approved {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .payment-status.cancelled {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
-        .assinatura-status {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        
-        .assinatura-status.active {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .assinatura-status.expired {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-        }
-        
-        .assinatura-status.cancelled {
-            background: #f8d7da;
-            border: 1px solid #f5c6cb;
-        }
-        
-        .notificacao-item {
-            padding: 12px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-        }
-        
-        .notificacao-item:last-child {
-            border-bottom: none;
-        }
-        
-        .notificacao-item.unread {
-            background: #e8f4fd;
-        }
-        
-        .notificacao-icon {
-            font-size: 1.2rem;
-            margin-top: 2px;
-        }
-        
-        .notificacao-content {
-            flex: 1;
-        }
-        
-        .notificacao-time {
-            font-size: 0.7rem;
-            color: var(--gray);
-            margin-top: 4px;
-        }
-        
-        .planos-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-            margin-top: 20px;
-        }
-        
-        @media (min-width: 768px) {
-            .planos-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-        
-        .plano-option {
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            padding: 25px;
-            text-align: center;
             transition: all 0.3s;
-            cursor: pointer;
         }
         
-        .plano-option:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        .whatsapp-button:hover {
+            background: #1da851;
+            transform: translateY(-2px);
         }
         
-        .plano-option.recommended {
-            border-color: var(--primary);
-            background: linear-gradient(135deg, #f8f9ff 0%, #eef0ff 100%);
-            position: relative;
-        }
-        
-        .plano-option.recommended::before {
-            content: "RECOMENDADO";
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--primary);
-            color: white;
-            padding: 4px 15px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-        
-        .plano-price {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin: 15px 0;
-            color: var(--primary);
-        }
-        
-        .plano-price .period {
-            font-size: 1rem;
-            color: var(--gray);
-        }
-        
-        .plano-savings {
-            background: #28a745;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            margin-bottom: 15px;
-            display: inline-block;
-        }
-        
-        .assinatura-info-card {
-            background: white;
-            border: 2px solid var(--border);
+        .cancelamento-info {
+            background: #fff8f8;
+            border: 2px solid #f8d7da;
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 20px;
         }
         
-        .assinatura-info-card.active {
-            border-color: #28a745;
-            background: linear-gradient(135deg, #f8fff9 0%, #e8f5e9 100%);
+        .cancelamento-info h4 {
+            color: #dc3545;
+            margin-bottom: 15px;
+            font-size: 1rem;
         }
         
-        .assinatura-info-card.expiring {
-            border-color: #ffc107;
-            background: linear-gradient(135deg, #fffdf8 0%, #fff3cd 100%);
+        .cancelamento-info ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
         }
         
-        .assinatura-info-card.expired {
-            border-color: #dc3545;
-            background: linear-gradient(135deg, #fff8f8 0%, #f8d7da 100%);
+        .cancelamento-info li {
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .search-filter {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .search-filter input {
+            flex: 1;
+            min-width: 200px;
         }
         
         @media (max-width: 768px) {
@@ -930,10 +763,9 @@
                 font-size: 1rem;
             }
 
-            .header-right {
-                margin-top: 8px;
-                width: 100%;
-                justify-content: space-between;
+            .user-info {
+                flex-wrap: wrap;
+                justify-content: flex-end;
             }
 
             .app {
@@ -1028,12 +860,12 @@
                 overflow-x: auto;
             }
             
-            .plano-price {
-                font-size: 2rem;
+            .search-filter {
+                flex-direction: column;
             }
             
-            .pix-code {
-                font-size: 0.7rem;
+            .search-filter input {
+                min-width: 100%;
             }
         }
 
@@ -1064,10 +896,6 @@
             .transactions-table td {
                 padding: 4px 2px;
                 font-size: 0.65rem;
-            }
-            
-            .planos-grid {
-                grid-template-columns: 1fr;
             }
         }
         
@@ -1147,7 +975,7 @@
                     
                     <div style="background: #f8f9fa; padding: 10px; border-radius: 6px; margin-bottom: 15px; font-size: 0.8rem;">
                         <p><strong><i class="fas fa-gift"></i> Plano Gratuito:</strong> 10 transações para testar</p>
-                        <p><strong><i class="fas fa-crown"></i> Após teste:</strong> Adquira um plano para continuar</p>
+                        <p><strong><i class="fas fa-crown"></i> Após teste:</strong> Assine o plano premium por R$ 9,90/mês</p>
                     </div>
                     
                     <button type="submit" class="btn btn-success btn-block">
@@ -1202,18 +1030,17 @@
             <button class="nav-tab" onclick="openTab('transacoes')">
                 <i class="fas fa-exchange-alt"></i> Transações
             </button>
-            <button class="nav-tab" onclick="openTab('financeiro')">
-                <i class="fas fa-credit-card"></i> Financeiro
-            </button>
             <button class="nav-tab" onclick="openTab('relatorios')">
                 <i class="fas fa-chart-bar"></i> Relatórios
             </button>
-            <button class="nav-tab" onclick="openTab('notificacoes')">
-                <i class="fas fa-bell"></i> Notificações
-                <span id="notificationBadge" class="badge badge-danger" style="display: none; margin-left: 5px;">0</span>
+            <button class="nav-tab" onclick="openTab('planos')">
+                <i class="fas fa-crown"></i> Planos
             </button>
             <button class="nav-tab" id="perfilTab" onclick="openTab('perfil')">
                 <i class="fas fa-user"></i> Meu Perfil
+            </button>
+            <button class="nav-tab" id="cancelamentoTab" style="display: none;" onclick="openTab('cancelamento')">
+                <i class="fas fa-times-circle"></i> Cancelamento
             </button>
             <button class="nav-tab" id="adminTab" style="display: none;" onclick="openTab('admin')">
                 <i class="fas fa-cog"></i> Administração
@@ -1229,27 +1056,12 @@
                     <h3>Nova Transação</h3>
                     <p>Adicione uma nova receita ou despesa</p>
                 </div>
-                <div class="quick-action-card" onclick="openTab('financeiro')">
-                    <i class="fas fa-crown"></i>
-                    <h3>Meu Plano</h3>
-                    <p>Gerencie sua assinatura</p>
-                </div>
-                <div class="quick-action-card" onclick="carregarDashboard()">
-                    <i class="fas fa-sync-alt"></i>
-                    <h3>Atualizar</h3>
-                    <p>Atualizar dados do dashboard</p>
-                </div>
             </div>
 
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title"><i class="fas fa-calendar"></i> Resumo Financeiro</h3>
-                    <div class="action-buttons">
-                        <input type="month" id="filtroMesDashboard" class="form-control" style="min-width: 130px;">
-                        <button onclick="carregarDashboard()" class="btn btn-success btn-sm">
-                            <i class="fas fa-sync-alt"></i> Atualizar
-                        </button>
-                    </div>
+                    <input type="month" id="filtroMesDashboard" class="form-control" style="min-width: 130px;" onchange="carregarDashboard()">
                 </div>
             </div>
 
@@ -1370,12 +1182,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title"><i class="fas fa-list"></i> Minhas Transações</h3>
-                        <div class="action-buttons">
-                            <input type="month" id="filtroMes" class="form-control" style="min-width: 130px;">
-                            <button onclick="carregarTransacoes()" class="btn btn-success btn-sm">
-                                <i class="fas fa-sync-alt"></i> Atualizar
-                            </button>
-                        </div>
+                        <input type="month" id="filtroMes" class="form-control" style="min-width: 130px;" onchange="carregarTransacoes()">
                     </div>
                     <div class="transactions-scroll-container">
                         <div class="table-container">
@@ -1404,155 +1211,6 @@
             </div>
         </div>
 
-        <!-- Nova Aba: Financeiro (Unificada) -->
-        <div id="financeiro" class="tab-content">
-            <!-- Status da Assinatura -->
-            <div id="assinaturaStatusContainer"></div>
-            
-            <!-- Planos Disponíveis -->
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title"><i class="fas fa-crown"></i> Escolha seu Plano Premium</h3>
-                    <div class="badge badge-success">
-                        <i class="fas fa-lock"></i> Pagamento Seguro
-                    </div>
-                </div>
-                
-                <div class="planos-grid">
-                    <!-- Plano Mensal -->
-                    <div class="plano-option">
-                        <div style="text-align: center;">
-                            <h3 style="color: var(--primary); margin-bottom: 10px;">
-                                <i class="fas fa-calendar-alt"></i> Plano Mensal
-                            </h3>
-                            <div class="plano-price">
-                                R$ 29,90
-                                <div class="period">por mês</div>
-                            </div>
-                            <ul style="text-align: left; margin: 20px 0; padding-left: 20px;">
-                                <li>✅ Transações ilimitadas</li>
-                                <li>✅ Dashboard avançado</li>
-                                <li>✅ Relatórios completos</li>
-                                <li>✅ Suporte por WhatsApp</li>
-                                <li>✅ Backup automático</li>
-                                <li>✅ Exportação completa</li>
-                            </ul>
-                            <button onclick="gerarPagamento('mensal')" class="btn btn-primary btn-block" style="padding: 12px;">
-                                <i class="fas fa-bolt"></i> Assinar Plano Mensal
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- Plano Anual -->
-                    <div class="plano-option recommended">
-                        <div style="text-align: center;">
-                            <h3 style="color: var(--primary); margin-bottom: 10px;">
-                                <i class="fas fa-calendar-star"></i> Plano Anual
-                            </h3>
-                            <div class="plano-savings">
-                                <i class="fas fa-percentage"></i> 20% de economia
-                            </div>
-                            <div class="plano-price">
-                                R$ 287,04
-                                <div class="period">por ano</div>
-                            </div>
-                            <div style="color: var(--gray); font-size: 0.9rem; margin-bottom: 15px;">
-                                Equivalente a R$ 23,92/mês
-                            </div>
-                            <ul style="text-align: left; margin: 20px 0; padding-left: 20px;">
-                                <li>✅ Transações ilimitadas</li>
-                                <li>✅ Dashboard avançado</li>
-                                <li>✅ Relatórios completos</li>
-                                <li>✅ Suporte prioritário</li>
-                                <li>✅ Backup automático</li>
-                                <li>✅ Exportação completa</li>
-                                <li>✅ Acesso antecipado a novas features</li>
-                            </ul>
-                            <button onclick="gerarPagamento('anual')" class="btn btn-primary btn-block" style="padding: 12px;">
-                                <i class="fas fa-crown"></i> Assinar Plano Anual
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Pagamento PIX -->
-            <div id="pixPaymentContainer" style="display: none;">
-                <div class="pix-payment-container">
-                    <h3 style="color: var(--pix); margin-bottom: 15px;">
-                        <i class="fas fa-qrcode"></i> Pagamento via PIX
-                    </h3>
-                    <p style="margin-bottom: 15px;">
-                        Escaneie o QR Code abaixo ou copie o código PIX para pagar
-                    </p>
-                    
-                    <div class="qrcode-container">
-                        <div id="qrcode"></div>
-                    </div>
-                    
-                    <div style="margin: 20px 0;">
-                        <p><strong>Código PIX (Copie e Cole):</strong></p>
-                        <div class="pix-code" id="pixCodeText">
-                            Carregando código PIX...
-                        </div>
-                        <button onclick="copiarPixCode()" class="copy-btn">
-                            <i class="fas fa-copy"></i> Copiar Código PIX
-                        </button>
-                    </div>
-                    
-                    <div class="payment-status pending" id="paymentStatus">
-                        <i class="fas fa-clock"></i> Aguardando pagamento...
-                    </div>
-                    
-                    <div style="margin-top: 20px;">
-                        <p style="font-size: 0.85rem; color: var(--gray);">
-                            <i class="fas fa-info-circle"></i> O pagamento é processado instantaneamente. 
-                            Após a confirmação, sua conta será atualizada automaticamente para Premium.
-                        </p>
-                    </div>
-                    
-                    <div style="margin-top: 20px;">
-                        <button onclick="verificarPagamento()" class="btn btn-pix">
-                            <i class="fas fa-sync-alt"></i> Verificar Pagamento
-                        </button>
-                        <button onclick="cancelarPagamento()" class="btn btn-outline-primary" style="margin-left: 10px;">
-                            <i class="fas fa-times"></i> Cancelar
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Histórico de Pagamentos -->
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title"><i class="fas fa-history"></i> Histórico de Pagamentos</h3>
-                    <button onclick="carregarHistoricoPagamentos()" class="btn btn-sm btn-success">
-                        <i class="fas fa-sync-alt"></i> Atualizar
-                    </button>
-                </div>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Data</th>
-                                <th>Descrição</th>
-                                <th>Valor</th>
-                                <th>Status</th>
-                                <th>Método</th>
-                            </tr>
-                        </thead>
-                        <tbody id="historicoPagamentosBody">
-                            <tr>
-                                <td colspan="5" style="text-align: center; color: var(--gray);">
-                                    Nenhum pagamento encontrado
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
         <!-- Relatórios -->
         <div id="relatorios" class="tab-content">
             <div class="card">
@@ -1577,28 +1235,100 @@
                 </div>
             </div>
         </div>
-        
-        <!-- Notificações -->
-        <div id="notificacoes" class="tab-content">
+
+        <!-- Planos -->
+        <div id="planos" class="tab-content">
+            <!-- Status da Assinatura -->
+            <div id="assinaturaStatusContainer"></div>
+            
+            <!-- Botão de Cancelamento (apenas para premium) -->
+            <div id="cancelamentoPremiumBtnContainer" style="display: none; margin-bottom: 20px; text-align: center;">
+                <button onclick="abrirAbaCancelamento()" class="btn btn-danger btn-lg" style="padding: 12px 30px; font-size: 1rem;">
+                    <i class="fas fa-times-circle"></i> Solicitar Cancelamento do Plano Premium
+                </button>
+                <p style="font-size: 0.8rem; color: var(--gray); margin-top: 10px;">
+                    Clique aqui para solicitar o cancelamento do seu plano premium
+                </p>
+            </div>
+            
+            <!-- Planos Disponíveis -->
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title"><i class="fas fa-bell"></i> Minhas Notificações</h3>
-                    <div class="action-buttons">
-                        <button onclick="marcarTodasComoLidas()" class="btn btn-sm btn-success">
-                            <i class="fas fa-check-double"></i> Marcar todas como lidas
-                        </button>
-                        <button onclick="carregarNotificacoes()" class="btn btn-sm btn-primary">
-                            <i class="fas fa-sync-alt"></i> Atualizar
-                        </button>
+                    <h3 class="card-title"><i class="fas fa-crown"></i> Escolha seu Plano</h3>
+                    <div class="badge badge-success">
+                        <i class="fas fa-check"></i> 100% Funcional
                     </div>
                 </div>
                 
-                <div id="notificacoesList">
-                    <!-- Notificações serão carregadas aqui -->
-                    <div style="text-align: center; padding: 30px; color: var(--gray);">
-                        <i class="fas fa-bell-slash" style="font-size: 2rem; margin-bottom: 15px;"></i>
-                        <p>Nenhuma notificação no momento</p>
+                <div class="grid-2">
+                    <!-- Plano Demo Gratuito -->
+                    <div class="plano-card">
+                        <div style="text-align: center;">
+                            <h3 style="color: var(--demo); margin-bottom: 10px;">
+                                <i class="fas fa-gift"></i> Plano Demo Gratuito
+                            </h3>
+                            <div class="plano-price" style="color: var(--demo);">
+                                GRÁTIS
+                            </div>
+                            <ul style="text-align: left; margin: 20px 0; padding-left: 20px;">
+                                <li>✅ Até 10 transações</li>
+                                <li>✅ Dashboard completo</li>
+                                <li>✅ Relatórios em excel e pdf</li>
+                                <li>✅ Gráficos interativos</li>
+                                <li>⛔ Sem suporte</li>
+                            </ul>
+                            <div style="margin-top: 20px; padding: 10px; background: #f8f9fa; border-radius: 6px;">
+                                <p style="font-size: 0.9rem; margin-bottom: 10px;">
+                                    <strong>Status atual:</strong> <span id="statusDemo">Ativo</span>
+                                </p>
+                                <button onclick="scrollToComoFunciona()" class="btn btn-outline-primary btn-block">
+                                    <i class="fas fa-info-circle"></i> Saber mais
+                                </button>
+                            </div>
+                        </div>
                     </div>
+                    
+                    <!-- Plano Premium -->
+                    <div class="plano-card premium">
+                        <div style="text-align: center;">
+                            <h3 style="color: var(--premium); margin-bottom: 10px;">
+                                <i class="fas fa-crown"></i> Plano Premium
+                            </h3>
+                            <div class="plano-price" style="color: var(--premium);">
+                                R$ 9,90
+                                <div class="period">por mês</div>
+                            </div>
+                            <ul style="text-align: left; margin: 20px 0; padding-left: 20px;">
+                                <li>✅ Transações ilimitadas</li>
+                                <li>✅ Dashboard completo</li>
+                                <li>✅ Relatórios em excel e pdf</li>
+                                <li>✅ Suporte por WhatsApp</li>
+                                <li>✅ Gráficos interativos</li>
+                            </ul>
+                            <button onclick="solicitarPlanoPremium()" class="btn btn-success btn-block btn-lg">
+                                <i class="fas fa-shopping-cart"></i> Solicitar Plano Premium
+                            </button>
+                            <p style="font-size: 0.8rem; color: var(--gray); margin-top: 10px;">
+                                Clique para acessar o pagamento recorrente
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="comoFuncionaSection" style="margin-top: 20px; padding: 15px; background: #f0f8ff; border-radius: 8px; border-left: 4px solid var(--primary);">
+                    <h4 style="color: var(--primary); margin-bottom: 10px;">
+                        <i class="fas fa-question-circle"></i> Como funciona?
+                    </h4>
+                    <ol style="margin-left: 20px; font-size: 0.9rem;">
+                        <li>Clique em "Solicitar Plano Premium"</li>
+                        <li>Será aberto o local de pagamento do Mercado Pago</li>
+                        <li>Após realizar o pagamento do plano recorrente</li>
+                        <li>Será direcionado ao WhatsApp do suporte</li>
+                        <li>Envie seu nome completo e o email de cadastro no Financial Control</li>
+                        <li>O suporte realizará a verificação manual do pagamento e na sequência fará a liberação do sistema premium</li>
+                        <li>Após confirmação do pagamento, seu plano será ativado manualmente</li>
+                        <li style="color: #dc3545; font-weight: bold;">Cancele o plano premium a qualquer momento, no botão que será liberado nesta mesma tela, após liberação do seu plano premium</li>
+                    </ol>
                 </div>
             </div>
         </div>
@@ -1657,6 +1387,57 @@
             </div>
         </div>
         
+        <!-- Cancelamento -->
+        <div id="cancelamento" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-times-circle"></i> Cancelamento de Plano</h3>
+                </div>
+                
+                <div class="cancelamento-info">
+                    <h4><i class="fas fa-exclamation-triangle"></i> Informações Importantes</h4>
+                    <p style="margin-bottom: 15px; font-size: 0.9rem;">
+                        Ao solicitar o cancelamento do seu plano, esteja ciente das seguintes informações:
+                    </p>
+                    <ul>
+                        <li>Você pode solicitar o cancelamento do plano recorrente a qualquer momento</li>
+                        <li>O cancelamento será efetivado no final do período atual já pago</li>
+                        <li>Você continuará tendo acesso ao sistema até o final do período contratado</li>
+                        <li>Após o cancelamento, todos os seus dados serão mantidos por 30 dias</li>
+                        <li>Se desejar reativar sua conta posteriormente, entre em contato conosco</li>
+                        <li>Não haverá reembolso de valores já pagos referentes ao período atual</li>
+                    </ul>
+                </div>
+                
+                <div class="cancelamento-info" style="background: #fffdf0; border-color: #ffeaa7;">
+                    <h4><i class="fas fa-lightbulb"></i> Antes de Cancelar</h4>
+                    <p style="margin-bottom: 15px; font-size: 0.9rem;">
+                        Considere estas alternativas antes de prosseguir com o cancelamento:
+                    </p>
+                    <ul>
+                        <li>Verifique se há problemas técnicos que possam ser resolvidos</li>
+                        <li>Entre em contato com nosso suporte para esclarecer dúvidas</li>
+                        <li>Avalie a possibilidade de alterar para um plano mais básico</li>
+                        <li>Confirme se realmente não utilizará mais o sistema</li>
+                    </ul>
+                </div>
+                
+                <div style="text-align: center; padding: 20px;">
+                    <p style="margin-bottom: 20px; font-size: 0.9rem;">
+                        Para solicitar cancelamento do plano premium, entre em contato via WhatsApp:
+                    </p>
+                    
+                    <button onclick="abrirWhatsAppCancelamento()" class="btn btn-danger" style="padding: 15px 25px; font-size: 1rem;">
+                        <i class="fab fa-whatsapp"></i> SOLICITAR CANCELAMENTO
+                    </button>
+                    
+                    <p style="font-size: 0.8rem; color: var(--gray); margin-top: 15px;">
+                        Esta ação abrirá o WhatsApp com uma mensagem pré-preparada para nosso atendimento
+                    </p>
+                </div>
+            </div>
+        </div>
+
         <!-- Administração (APENAS PARA ADMIN) -->
         <div id="admin" class="tab-content">
             <div class="grid-2">
@@ -1700,14 +1481,14 @@
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title"><i class="fas fa-users"></i> Gerenciar Usuários</h3>
-                        <div class="action-buttons">
-                            <button onclick="carregarUsuariosDemo()" class="btn btn-warning btn-sm">
-                                <i class="fas fa-gift"></i> Ver Demos
-                            </button>
-                            <button onclick="carregarUsuarios()" class="btn btn-success btn-sm">
-                                <i class="fas fa-sync-alt"></i> Atualizar
-                            </button>
-                        </div>
+                    </div>
+                    
+                    <!-- Filtro de busca -->
+                    <div class="search-filter">
+                        <input type="text" id="buscarUsuario" class="form-control" placeholder="Buscar por nome ou e-mail..." onkeyup="filtrarUsuarios()">
+                        <button onclick="limparBusca()" class="btn btn-outline-primary">
+                            <i class="fas fa-times"></i> Limpar
+                        </button>
                     </div>
                     
                     <!-- Abas para usuários demo e premium -->
@@ -1770,65 +1551,6 @@
                         </div>
                     </div>
                 </div>
-                
-                <!-- Dashboard Admin - Pagamentos -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title"><i class="fas fa-chart-line"></i> Dashboard de Pagamentos</h3>
-                        <div class="action-buttons">
-                            <button onclick="carregarDashboardPagamentos()" class="btn btn-sm btn-primary">
-                                <i class="fas fa-sync-alt"></i> Atualizar
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="grid-4">
-                        <div class="summary-card">
-                            <h3><i class="fas fa-money-bill-wave"></i> Receita Total</h3>
-                            <div id="receitaTotal" class="value">R$ 0,00</div>
-                            <div class="subtitle">Todos os tempos</div>
-                        </div>
-                        <div class="summary-card receita">
-                            <h3><i class="fas fa-calendar-check"></i> Este Mês</h3>
-                            <div id="receitaMes" class="value receita">R$ 0,00</div>
-                            <div class="subtitle">Receita mensal</div>
-                        </div>
-                        <div class="summary-card">
-                            <h3><i class="fas fa-users"></i> Usuários Premium</h3>
-                            <div id="totalPremium" class="value">0</div>
-                            <div class="subtitle">Ativos</div>
-                        </div>
-                        <div class="summary-card despesa">
-                            <h3><i class="fas fa-clock"></i> Pendentes</h3>
-                            <div id="pagamentosPendentes" class="value despesa">0</div>
-                            <div class="subtitle">Pagamentos</div>
-                        </div>
-                    </div>
-                    
-                    <div style="margin-top: 20px;">
-                        <h4 style="margin-bottom: 10px; font-size: 0.9rem;">Últimos Pagamentos</h4>
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Usuário</th>
-                                        <th>Valor</th>
-                                        <th>Data</th>
-                                        <th>Status</th>
-                                        <th>Tipo</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="ultimosPagamentosBody">
-                                    <tr>
-                                        <td colspan="5" style="text-align: center; color: var(--gray);">
-                                            Carregando pagamentos...
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -1840,39 +1562,16 @@
 
     <script>
         // ============================================================
-        // CONFIGURAÇÕES DO SISTEMA - LEIA COM ATENÇÃO!
+        // CONFIGURAÇÕES DO SISTEMA
         // ============================================================
         
         // 1. CONFIGURAÇÃO DO SUPABASE
         const SUPABASE_URL = 'https://rprocjpzydkondrguzui.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwcm9janB6eWRrb25kcmd1enVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM2ODA2NjIsImV4cCI6MjA3OTI1NjY2Mn0.bD36ix62EYFdnnTKXN3iK9C9AoOeKyWGkY10D-A1tm0';
         
-        // 2. ⚠️⚠️⚠️ IMPORTANTE: TOKEN MERCADO PAGO ⚠️⚠️⚠️
-        // ================================================
-        // ATENÇÃO LEIGO: SUBSTITUA O TOKEN ABAIXO QUANDO FOR PARA PRODUÇÃO!
-        // ================================================
-        
-        // TOKEN DE TESTE (use para desenvolvimento):
-        const MERCADOPAGO_TOKEN = 'APP_USR-822136515431736-013007-7ed1586544474bff3bca6037cea26d1a-10155732';
-        
-        // ⚠️ PARA PRODUÇÃO, VOCÊ DEVE:
-        // 1. Acessar https://www.mercadopago.com.br
-        // 2. Fazer login na sua conta
-        // 3. Ir em "Desenvolvimento" > "Credenciais"
-        // 4. Copiar o "Access token" da PRODUÇÃO
-        // 5. Substituir o valor acima pelo seu token de produção
-        //
-        // Exemplo do token de produção:
-        // const MERCADOPAGO_TOKEN = 'APP_USR-1234567890123456-123456-abcdef1234567890abcdef1234567890-123456789';
-        // ================================================
-        
-        // 3. URL DA API NO VERCEL
-        const API_URL = 'https://financialcontrolsystem.vercel.app/api';
-        
-        // 4. CONFIGURAÇÕES DO SISTEMA
+        // 2. CONFIGURAÇÕES DO SISTEMA
         const LIMITE_TRANSACOES_DEMO = 10;
-        const PLANO_MENSAL_VALOR = 29.90;
-        const PLANO_ANUAL_VALOR = 287.04;
+        const WHATSAPP_NUMERO = '5544997311635';
         
         // ============================================================
         // FIM DAS CONFIGURAÇÕES
@@ -1882,8 +1581,95 @@
         let usuarioLogado = null;
         let graficoPizza = null;
         let graficoLinha = null;
-        let currentPaymentId = null;
-        let paymentCheckInterval = null;
+        let usuariosDemoCache = [];
+        let usuariosPremiumCache = [];
+        let relatorioAtual = {
+            transacoes: [],
+            mesRelatorio: '',
+            receitas: 0,
+            despesas: 0,
+            categorias: []
+        };
+
+        // ==================== FUNÇÕES DE UTILIDADE PARA FUSO HORÁRIO ====================
+
+        // Obter data atual no fuso horário de Brasília (BRT/BRST)
+        function getDataBrasilia() {
+            const agora = new Date();
+            
+            // Diferença em horas entre UTC e Brasília (UTC-3)
+            const offsetBrasilia = -3;
+            
+            // Converter para hora de Brasília
+            const horaBrasilia = new Date(agora.getTime() + (offsetBrasilia * 60 * 60 * 1000));
+            
+            return horaBrasilia;
+        }
+
+        // Formatar data para YYYY-MM-DD (para input date)
+        function formatarDataParaInput(date) {
+            const ano = date.getFullYear();
+            const mes = String(date.getMonth() + 1).padStart(2, '0');
+            const dia = String(date.getDate()).padStart(2, '0');
+            return `${ano}-${mes}-${dia}`;
+        }
+
+        // Formatar data para exibição (pt-BR)
+        function formatarDataParaExibicao(date) {
+            if (!date) return '';
+            
+            let dataObj;
+            
+            if (typeof date === 'string') {
+                // Se a data for uma string no formato YYYY-MM-DD
+                if (date.includes('T')) {
+                    dataObj = new Date(date);
+                } else {
+                    // Adicionar horário do meio-dia de Brasília para evitar problemas
+                    const [ano, mes, dia] = date.split('-');
+                    dataObj = new Date(ano, mes - 1, dia, 12, 0, 0);
+                }
+            } else if (date instanceof Date) {
+                dataObj = date;
+            } else {
+                return 'Data inválida';
+            }
+            
+            return dataObj.toLocaleDateString('pt-BR');
+        }
+
+        // Obter ano e mês no formato YYYY-MM (para filtros)
+        function getMesAtualBrasilia() {
+            const dataBrasilia = getDataBrasilia();
+            const ano = dataBrasilia.getFullYear();
+            const mes = String(dataBrasilia.getMonth() + 1).padStart(2, '0');
+            return `${ano}-${mes}`;
+        }
+
+        // Converter string de data para objeto Date considerando Brasília
+        function parseDataBrasilia(dataString) {
+            if (!dataString) return null;
+            
+            // Se já for um objeto Date
+            if (dataString instanceof Date) return dataString;
+            
+            // Se for uma string no formato YYYY-MM-DD
+            if (typeof dataString === 'string' && dataString.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                const [ano, mes, dia] = dataString.split('-');
+                // Criar data no meio-dia de Brasília
+                return new Date(ano, parseInt(mes) - 1, parseInt(dia), 12, 0, 0);
+            }
+            
+            // Se for uma string ISO
+            if (typeof dataString === 'string' && dataString.includes('T')) {
+                const dataUTC = new Date(dataString);
+                // Ajustar para Brasília (UTC-3)
+                return new Date(dataUTC.getTime() - (3 * 60 * 60 * 1000));
+            }
+            
+            // Tentar converter de qualquer forma
+            return new Date(dataString);
+        }
 
         // ==================== FUNÇÕES DE CONTROLE ====================
 
@@ -1919,6 +1705,13 @@
             document.getElementById('cadastroSection').style.display = 'none';
             document.getElementById('loginForm').style.display = 'block';
             document.getElementById('loginMessage').style.display = 'none';
+        }
+
+        function scrollToComoFunciona() {
+            const comoFuncionaSection = document.getElementById('comoFuncionaSection');
+            if (comoFuncionaSection) {
+                comoFuncionaSection.scrollIntoView({ behavior: 'smooth' });
+            }
         }
 
         function salvarDadosLogin(email, senha, lembrar) {
@@ -2002,6 +1795,9 @@
                     return;
                 }
                 
+                // Data atual em Brasília
+                const dataBrasilia = getDataBrasilia();
+                
                 // Criar novo usuário
                 const novoUsuario = {
                     nome: nome,
@@ -2010,7 +1806,8 @@
                     plano: 'demo',
                     transacoes_realizadas: 0,
                     ativo: true,
-                    nivel_acesso: 'usuario'
+                    nivel_acesso: 'usuario',
+                    data_cadastro: dataBrasilia.toISOString()
                 };
                 
                 // Criar usuário usando POST
@@ -2027,8 +1824,7 @@
                 
                 if (response.ok) {
                     // Criar assinatura demo para o usuário
-                    const dataCadastro = new Date().toISOString();
-                    const dataExpiracao = new Date();
+                    const dataExpiracao = new Date(dataBrasilia);
                     dataExpiracao.setDate(dataExpiracao.getDate() + 30); // Demo de 30 dias
                     
                     const novaAssinatura = {
@@ -2036,10 +1832,12 @@
                         plano: 'demo',
                         valor: 0,
                         status: 'active',
-                        data_inicio: dataCadastro,
+                        data_inicio: dataBrasilia.toISOString(),
                         data_expiracao: dataExpiracao.toISOString(),
                         metodo_pagamento: 'demo',
-                        renovacao_automatica: false
+                        renovacao_automatica: false,
+                        created_at: dataBrasilia.toISOString(),
+                        updated_at: dataBrasilia.toISOString()
                     };
                     
                     // Primeiro precisamos obter o ID do usuário criado
@@ -2161,15 +1959,13 @@
                 atualizarInfoUsuario();
                 carregarTransacoes();
                 carregarDashboard();
-                carregarNotificacoes();
                 carregarStatusAssinatura();
-                carregarHistoricoPagamentos();
                 
                 showAlert('Login realizado com sucesso!', 'success');
                 
                 // Verificar se o usuário é admin
                 if (usuarioLogado.nivel_acesso === 'admin') {
-                    carregarDashboardPagamentos();
+                    carregarUsuariosDemo();
                 }
                 
             } catch (error) {
@@ -2202,6 +1998,15 @@
                 document.getElementById('adminTab').style.display = 'flex';
             } else {
                 document.getElementById('adminTab').style.display = 'none';
+            }
+            
+            // Mostrar ou ocultar a aba de cancelamento
+            if (usuarioLogado.plano === 'premium') {
+                document.getElementById('cancelamentoTab').style.display = 'flex';
+                document.getElementById('cancelamentoPremiumBtnContainer').style.display = 'block';
+            } else {
+                document.getElementById('cancelamentoTab').style.display = 'none';
+                document.getElementById('cancelamentoPremiumBtnContainer').style.display = 'none';
             }
         }
 
@@ -2253,9 +2058,9 @@
                 }
                 
                 const assinatura = assinaturas[0];
-                const hoje = new Date();
-                const dataExpiracao = new Date(assinatura.data_expiracao);
-                const diasRestantes = Math.ceil((dataExpiracao - hoje) / (1000 * 60 * 60 * 24));
+                const hojeBrasilia = getDataBrasilia();
+                const dataExpiracao = parseDataBrasilia(assinatura.data_expiracao);
+                const diasRestantes = Math.ceil((dataExpiracao - hojeBrasilia) / (1000 * 60 * 60 * 24));
                 
                 let statusClass = 'assinatura-status ';
                 let statusText = '';
@@ -2288,7 +2093,7 @@
                     statusClass += 'cancelled';
                     statusIcon = '<i class="fas fa-ban" style="color: #dc3545;"></i>';
                     statusBadge = '<span class="badge badge-danger">CANCELADA</span>';
-                    statusText = `Sua assinatura foi cancelada em ${new Date(assinatura.updated_at || assinatura.data_expiracao).toLocaleDateString('pt-BR')}`;
+                    statusText = `Sua assinatura foi cancelada em ${formatarDataParaExibicao(assinatura.updated_at || assinatura.data_expiracao)}`;
                 } else {
                     statusClass += 'expired';
                     statusIcon = '<i class="fas fa-question-circle" style="color: #6c757d;"></i>';
@@ -2322,8 +2127,8 @@
             if (!usuarioLogado) return;
             
             try {
-                const dataCadastro = new Date().toISOString();
-                const dataExpiracao = new Date();
+                const dataBrasilia = getDataBrasilia();
+                const dataExpiracao = new Date(dataBrasilia);
                 dataExpiracao.setDate(dataExpiracao.getDate() + 30); // Demo de 30 dias
                 
                 const novaAssinatura = {
@@ -2331,12 +2136,12 @@
                     plano: 'demo',
                     valor: 0,
                     status: 'active',
-                    data_inicio: dataCadastro,
+                    data_inicio: dataBrasilia.toISOString(),
                     data_expiracao: dataExpiracao.toISOString(),
                     metodo_pagamento: 'demo',
                     renovacao_automatica: false,
-                    created_at: dataCadastro,
-                    updated_at: dataCadastro
+                    created_at: dataBrasilia.toISOString(),
+                    updated_at: dataBrasilia.toISOString()
                 };
                 
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/assinaturas`, {
@@ -2362,6 +2167,8 @@
             if (!usuarioLogado) return;
             
             try {
+                const dataAtual = getDataBrasilia().toISOString();
+                
                 // Atualizar usuário para demo
                 const responseUsuario = await fetch(`${SUPABASE_URL}/rest/v1/usuarios?id=eq.${usuarioLogado.id}`, {
                     method: 'PATCH',
@@ -2372,7 +2179,8 @@
                         'Prefer': 'return=minimal'
                     },
                     body: JSON.stringify({ 
-                        plano: 'demo'
+                        plano: 'demo',
+                        updated_at: dataAtual
                     })
                 });
                 
@@ -2389,7 +2197,7 @@
                         status: 'expired',
                         plano: 'demo',
                         valor: 0,
-                        updated_at: new Date().toISOString()
+                        updated_at: dataAtual
                     })
                 });
                 
@@ -2397,14 +2205,6 @@
                     usuarioLogado.plano = 'demo';
                     atualizarInfoUsuario();
                     carregarStatusAssinatura();
-                    
-                    // Criar notificação
-                    await criarNotificacao(
-                        usuarioLogado.id,
-                        'Assinatura Expirada',
-                        'Sua assinatura premium expirou e você foi rebaixado para o plano demo. Para continuar com recursos ilimitados, renove sua assinatura.',
-                        'warning'
-                    );
                     
                     showAlert('Sua assinatura expirou. Você foi rebaixado para o plano demo.', 'warning');
                 }
@@ -2414,744 +2214,27 @@
             }
         }
 
-        // ==================== SISTEMA DE PAGAMENTO COM MERCADO PAGO ====================
+        // ==================== FUNÇÕES DO WHATSAPP ====================
 
-        async function gerarPagamento(tipoPlano) {
-            if (!usuarioLogado) {
-                showAlert('Você precisa estar logado para assinar um plano', 'warning');
-                return;
-            }
-            
-            // Verificar se já tem uma assinatura premium ativa
-            try {
-                const response = await fetch(
-                    `${SUPABASE_URL}/rest/v1/assinaturas?usuario_id=eq.${usuarioLogado.id}&plano=eq.premium&status=eq.active`,
-                    {
-                        headers: {
-                            'apikey': SUPABASE_KEY,
-                            'Authorization': `Bearer ${SUPABASE_KEY}`,
-                            'Content-Type': 'application/json'
-                        }
-                    }
-                );
-                
-                if (response.ok) {
-                    const assinaturas = await response.json();
-                    if (assinaturas.length > 0) {
-                        showAlert('Você já possui uma assinatura premium ativa.', 'info');
-                        return;
-                    }
-                }
-            } catch (error) {
-                console.error('Erro ao verificar assinatura:', error);
-            }
-            
-            const valor = tipoPlano === 'mensal' ? PLANO_MENSAL_VALOR : PLANO_ANUAL_VALOR;
-            const descricao = tipoPlano === 'mensal' ? 'Plano Mensal FinancialControl' : 'Plano Anual FinancialControl';
-            
-            // Mostrar container de pagamento PIX
-            document.getElementById('pixPaymentContainer').style.display = 'block';
-            document.getElementById('paymentStatus').className = 'payment-status pending';
-            document.getElementById('paymentStatus').innerHTML = '<i class="fas fa-clock"></i> Aguardando pagamento...';
-            
-            // Limpar QR Code anterior
-            document.getElementById('qrcode').innerHTML = '';
-            document.getElementById('pixCodeText').textContent = 'Gerando código PIX...';
-            
-            try {
-                // Criar pagamento PIX usando a API do Mercado Pago
-                const paymentData = await criarPagamentoPix(valor, descricao, tipoPlano);
-                
-                if (!paymentData || !paymentData.id) {
-                    throw new Error('Não foi possível criar o pagamento');
-                }
-                
-                // Salvar ID do pagamento
-                currentPaymentId = paymentData.id;
-                
-                // Exibir QR Code
-                let qrCodeText = '';
-                
-                // Obter dados do QR Code PIX
-                if (paymentData.point_of_interaction && 
-                    paymentData.point_of_interaction.transaction_data && 
-                    paymentData.point_of_interaction.transaction_data.qr_code) {
-                    
-                    qrCodeText = paymentData.point_of_interaction.transaction_data.qr_code;
-                    
-                } else {
-                    throw new Error('QR Code não encontrado na resposta do Mercado Pago');
-                }
-                
-                if (!qrCodeText) {
-                    throw new Error('QR Code vazio na resposta');
-                }
-                
-                // Gerar QR Code visual
-                try {
-                    QRCode.toCanvas(document.getElementById('qrcode'), qrCodeText, {
-                        width: 200,
-                        height: 200,
-                        margin: 1,
-                        color: {
-                            dark: '#32BCAD',
-                            light: '#FFFFFF'
-                        }
-                    }, function(error) {
-                        if (error) {
-                            console.error('Erro ao gerar QR Code visual:', error);
-                            document.getElementById('qrcode').innerHTML = 
-                                '<div style="text-align: center; padding: 20px; color: #666;">' +
-                                '<i class="fas fa-exclamation-triangle" style="font-size: 2rem;"></i><br>' +
-                                'Use o código PIX abaixo</div>';
-                        }
-                    });
-                } catch (qrError) {
-                    console.error('Erro no QR Code:', qrError);
-                    document.getElementById('qrcode').innerHTML = 
-                        '<div style="text-align: center; padding: 20px; color: #666;">' +
-                        'QR Code indisponível. Use o código abaixo.</div>';
-                }
-                
-                document.getElementById('pixCodeText').textContent = qrCodeText;
-                
-                // Iniciar verificação periódica do pagamento
-                if (paymentCheckInterval) {
-                    clearInterval(paymentCheckInterval);
-                }
-                
-                paymentCheckInterval = setInterval(() => {
-                    verificarPagamento();
-                }, 5000); // Verificar a cada 5 segundos
-                
-                // Registrar pagamento no banco de dados
-                await registrarPagamento(paymentData, tipoPlano);
-                
-                showAlert('Pagamento PIX gerado com sucesso! Escaneie o QR Code ou copie o código.', 'success');
-                
-            } catch (error) {
-                console.error('Erro ao gerar pagamento:', error);
-                showAlert('Erro ao gerar pagamento PIX: ' + error.message, 'danger');
-                document.getElementById('pixPaymentContainer').style.display = 'none';
-            }
+        function abrirWhatsApp(mensagem) {
+            const texto = encodeURIComponent(mensagem);
+            const url = `https://wa.me/${WHATSAPP_NUMERO}?text=${texto}`;
+            window.open(url, '_blank');
         }
 
-        // Função para criar pagamento PIX no Mercado Pago
-        async function criarPagamentoPix(valor, descricao, tipoPlano) {
-            console.log('Criando pagamento PIX no Mercado Pago...');
-            console.log('Valor:', valor);
-            console.log('Descrição:', descricao);
-            console.log('Token usado:', MERCADOPAGO_TOKEN.substring(0, 10) + '...');
+        function solicitarPlanoPremium() {
+            // Abre diretamente o link de pagamento do Mercado Pago
+            const urlPagamento = 'https://www.mercadopago.com.br/subscriptions/checkout?preapproval_plan_id=806364e2f70146d39a09d1a66c180eaf';
+            window.open(urlPagamento, '_blank');
+        }
+
+        function abrirWhatsAppCancelamento() {
+            const nomeUsuario = usuarioLogado ? usuarioLogado.nome : 'Cliente';
+            const emailUsuario = usuarioLogado ? usuarioLogado.email : 'Não informado';
+            const planoAtual = usuarioLogado && usuarioLogado.plano === 'premium' ? 'Premium' : 'Demo';
             
-            try {
-                const response = await fetch('https://api.mercadopago.com/v1/payments', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${MERCADOPAGO_TOKEN}`
-                    },
-                    body: JSON.stringify({
-                        transaction_amount: valor,
-                        description: descricao,
-                        payment_method_id: 'pix',
-                        payer: {
-                            email: usuarioLogado.email,
-                            first_name: usuarioLogado.nome.split(' ')[0] || 'Usuário',
-                            last_name: usuarioLogado.nome.split(' ').slice(1).join(' ') || 'FinancialControl'
-                        },
-                        notification_url: `${API_URL}/mercadopago-webhook`,
-                        external_reference: `user_${usuarioLogado.id}_${Date.now()}_${tipoPlano}`
-                    })
-                });
-                
-                console.log('Resposta do Mercado Pago - Status:', response.status);
-                
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('Erro detalhado do Mercado Pago:', errorText);
-                    
-                    // Tentativa alternativa sem alguns campos
-                    console.log('Tentando método alternativo...');
-                    return await criarPagamentoPixAlternativo(valor, descricao, tipoPlano);
-                }
-                
-                const data = await response.json();
-                console.log('Dados do pagamento criado:', {
-                    id: data.id,
-                    status: data.status,
-                    has_qr: !!(data.point_of_interaction?.transaction_data?.qr_code)
-                });
-                
-                return data;
-                
-            } catch (error) {
-                console.error('Erro na requisição ao Mercado Pago:', error);
-                throw error;
-            }
-        }
-
-        // Método alternativo simplificado
-        async function criarPagamentoPixAlternativo(valor, descricao, tipoPlano) {
-            console.log('Usando método alternativo...');
-            
-            const response = await fetch('https://api.mercadopago.com/v1/payments', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${MERCADOPAGO_TOKEN}`
-                },
-                body: JSON.stringify({
-                    transaction_amount: valor,
-                    description: descricao,
-                    payment_method_id: 'pix',
-                    payer: {
-                        email: usuarioLogado.email
-                    }
-                })
-            });
-            
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`Mercado Pago falhou: ${response.status} - ${errorText}`);
-            }
-            
-            return await response.json();
-        }
-
-        // Função para registrar pagamento no banco
-        async function registrarPagamento(paymentData, tipoPlano) {
-            try {
-                const pagamento = {
-                    usuario_id: usuarioLogado.id,
-                    payment_id: paymentData.id,
-                    transaction_amount: paymentData.transaction_amount || paymentData.transaction_amount || 0,
-                    description: paymentData.description,
-                    status: paymentData.status || 'pending',
-                    status_detail: paymentData.status_detail || 'pending',
-                    payment_method_id: paymentData.payment_method_id || 'pix',
-                    date_created: new Date().toISOString(),
-                    date_approved: null,
-                    plano_tipo: tipoPlano,
-                    qr_code: paymentData.point_of_interaction?.transaction_data?.qr_code || '',
-                    qr_code_base64: paymentData.point_of_interaction?.transaction_data?.qr_code_base64 || ''
-                };
-                
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/pagamentos`, {
-                    method: 'POST',
-                    headers: {
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'return=minimal'
-                    },
-                    body: JSON.stringify(pagamento)
-                });
-                
-                return response.ok;
-                
-            } catch (error) {
-                console.error('Erro ao registrar pagamento:', error);
-                return false;
-            }
-        }
-
-        async function verificarPagamento() {
-            if (!currentPaymentId) return;
-            
-            try {
-                let paymentStatus;
-                
-                // Verificar diretamente no Mercado Pago
-                const response = await fetch(`https://api.mercadopago.com/v1/payments/${currentPaymentId}`, {
-                    headers: {
-                        'Authorization': `Bearer ${MERCADOPAGO_TOKEN}`
-                    }
-                });
-                
-                if (!response.ok) {
-                    throw new Error('Não foi possível verificar o pagamento');
-                }
-                
-                const paymentData = await response.json();
-                paymentStatus = {
-                    status: paymentData.status,
-                    status_detail: paymentData.status_detail
-                };
-                
-                // Atualizar status na interface
-                const statusElement = document.getElementById('paymentStatus');
-                
-                if (paymentStatus.status === 'approved') {
-                    statusElement.className = 'payment-status approved';
-                    statusElement.innerHTML = '<i class="fas fa-check-circle"></i> Pagamento aprovado! Atualizando sua conta...';
-                    
-                    // Atualizar usuário para premium
-                    await atualizarParaPremium(paymentData.plano_tipo || 'mensal');
-                    
-                    // Parar verificação
-                    if (paymentCheckInterval) {
-                        clearInterval(paymentCheckInterval);
-                        paymentCheckInterval = null;
-                    }
-                    
-                    // Aguardar 3 segundos e esconder container
-                    setTimeout(() => {
-                        document.getElementById('pixPaymentContainer').style.display = 'none';
-                        carregarStatusAssinatura();
-                        carregarHistoricoPagamentos();
-                    }, 3000);
-                    
-                } else if (paymentStatus.status === 'pending') {
-                    statusElement.className = 'payment-status pending';
-                    statusElement.innerHTML = '<i class="fas fa-clock"></i> Aguardando pagamento...';
-                } else if (paymentStatus.status === 'cancelled' || paymentStatus.status === 'rejected') {
-                    statusElement.className = 'payment-status cancelled';
-                    statusElement.innerHTML = '<i class="fas fa-times-circle"></i> Pagamento cancelado ou rejeitado';
-                    
-                    // Parar verificação
-                    if (paymentCheckInterval) {
-                        clearInterval(paymentCheckInterval);
-                        paymentCheckInterval = null;
-                    }
-                }
-                
-                // Atualizar status no banco de dados
-                await atualizarStatusPagamento(currentPaymentId, paymentStatus.status, paymentStatus.status_detail);
-                
-            } catch (error) {
-                console.error('Erro ao verificar pagamento:', error);
-            }
-        }
-
-        async function atualizarStatusPagamento(paymentId, status, statusDetail) {
-            try {
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/pagamentos?payment_id=eq.${paymentId}`, {
-                    method: 'PATCH',
-                    headers: {
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'return=minimal'
-                    },
-                    body: JSON.stringify({ 
-                        status: status,
-                        status_detail: statusDetail,
-                        updated_at: new Date().toISOString()
-                    })
-                });
-                
-                return response.ok;
-            } catch (error) {
-                console.error('Erro ao atualizar status do pagamento:', error);
-                return false;
-            }
-        }
-
-        async function atualizarParaPremium(tipoPlano) {
-            try {
-                // Atualizar usuário para premium
-                const responseUsuario = await fetch(`${SUPABASE_URL}/rest/v1/usuarios?id=eq.${usuarioLogado.id}`, {
-                    method: 'PATCH',
-                    headers: {
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'return=minimal'
-                    },
-                    body: JSON.stringify({ 
-                        plano: 'premium'
-                    })
-                });
-                
-                if (responseUsuario.ok) {
-                    usuarioLogado.plano = 'premium';
-                    atualizarInfoUsuario();
-                    
-                    // Calcular datas da assinatura
-                    const dataInicio = new Date();
-                    const dataExpiracao = new Date();
-                    
-                    if (tipoPlano === 'mensal') {
-                        dataExpiracao.setMonth(dataExpiracao.getMonth() + 1);
-                    } else {
-                        dataExpiracao.setFullYear(dataExpiracao.getFullYear() + 1);
-                    }
-                    
-                    // Criar ou atualizar assinatura
-                    const novaAssinatura = {
-                        usuario_id: usuarioLogado.id,
-                        plano: 'premium',
-                        valor: tipoPlano === 'mensal' ? PLANO_MENSAL_VALOR : PLANO_ANUAL_VALOR,
-                        status: 'active',
-                        data_inicio: dataInicio.toISOString(),
-                        data_expiracao: dataExpiracao.toISOString(),
-                        metodo_pagamento: 'pix',
-                        renovacao_automatica: false,
-                        created_at: dataInicio.toISOString(),
-                        updated_at: dataInicio.toISOString()
-                    };
-                    
-                    // Verificar se já existe assinatura
-                    const responseAssinatura = await fetch(
-                        `${SUPABASE_URL}/rest/v1/assinaturas?usuario_id=eq.${usuarioLogado.id}`,
-                        {
-                            headers: {
-                                'apikey': SUPABASE_KEY,
-                                'Authorization': `Bearer ${SUPABASE_KEY}`,
-                                'Content-Type': 'application/json'
-                            }
-                        }
-                    );
-                    
-                    if (responseAssinatura.ok) {
-                        const assinaturas = await responseAssinatura.json();
-                        
-                        if (assinaturas.length > 0) {
-                            // Atualizar assinatura existente
-                            await fetch(`${SUPABASE_URL}/rest/v1/assinaturas?id=eq.${assinaturas[0].id}`, {
-                                method: 'PATCH',
-                                headers: {
-                                    'apikey': SUPABASE_KEY,
-                                    'Authorization': `Bearer ${SUPABASE_KEY}`,
-                                    'Content-Type': 'application/json',
-                                    'Prefer': 'return=minimal'
-                                },
-                                body: JSON.stringify(novaAssinatura)
-                            });
-                        } else {
-                            // Criar nova assinatura
-                            await fetch(`${SUPABASE_URL}/rest/v1/assinaturas`, {
-                                method: 'POST',
-                                headers: {
-                                    'apikey': SUPABASE_KEY,
-                                    'Authorization': `Bearer ${SUPABASE_KEY}`,
-                                    'Content-Type': 'application/json',
-                                    'Prefer': 'return=minimal'
-                                },
-                                body: JSON.stringify(novaAssinatura)
-                            });
-                        }
-                    }
-                    
-                    // Criar notificação
-                    await criarNotificacao(
-                        usuarioLogado.id,
-                        'Assinatura Ativada! 🎉',
-                        `Parabéns! Sua assinatura premium (${tipoPlano}) foi ativada com sucesso. Você agora tem acesso a todos os recursos do FinancialControl.`,
-                        'success'
-                    );
-                    
-                    showAlert('Parabéns! Sua conta foi atualizada para Premium.', 'success');
-                }
-                
-            } catch (error) {
-                console.error('Erro ao atualizar para premium:', error);
-                showAlert('Erro ao atualizar conta para premium', 'danger');
-            }
-        }
-
-        function cancelarPagamento() {
-            if (paymentCheckInterval) {
-                clearInterval(paymentCheckInterval);
-                paymentCheckInterval = null;
-            }
-            
-            document.getElementById('pixPaymentContainer').style.display = 'none';
-            showAlert('Pagamento cancelado', 'info');
-        }
-
-        function copiarPixCode() {
-            const pixCode = document.getElementById('pixCodeText').textContent;
-            
-            navigator.clipboard.writeText(pixCode).then(() => {
-                showAlert('Código PIX copiado para a área de transferência!', 'success');
-            }).catch(err => {
-                console.error('Erro ao copiar código:', err);
-                showAlert('Erro ao copiar código', 'danger');
-            });
-        }
-
-        // ==================== HISTÓRICO DE PAGAMENTOS ====================
-
-        async function carregarHistoricoPagamentos() {
-            if (!usuarioLogado) return;
-            
-            try {
-                const response = await fetch(
-                    `${SUPABASE_URL}/rest/v1/pagamentos?usuario_id=eq.${usuarioLogado.id}&order=date_created.desc`,
-                    {
-                        headers: {
-                            'apikey': SUPABASE_KEY,
-                            'Authorization': `Bearer ${SUPABASE_KEY}`,
-                            'Content-Type': 'application/json'
-                        }
-                    }
-                );
-                
-                if (!response.ok) throw new Error('Erro ao carregar histórico');
-                
-                const pagamentos = await response.json();
-                const tbody = document.getElementById('historicoPagamentosBody');
-                tbody.innerHTML = '';
-                
-                if (pagamentos.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--gray);">Nenhum pagamento encontrado</td></tr>';
-                    return;
-                }
-                
-                pagamentos.forEach(pagamento => {
-                    const tr = document.createElement('tr');
-                    
-                    // Formatar data
-                    let dataFormatada = '-';
-                    if (pagamento.date_created) {
-                        const data = new Date(pagamento.date_created);
-                        dataFormatada = data.toLocaleDateString('pt-BR');
-                    }
-                    
-                    // Determinar badge de status
-                    let statusBadge = '';
-                    if (pagamento.status === 'approved') {
-                        statusBadge = '<span class="badge badge-success">Aprovado</span>';
-                    } else if (pagamento.status === 'pending') {
-                        statusBadge = '<span class="badge badge-warning">Pendente</span>';
-                    } else if (pagamento.status === 'cancelled' || pagamento.status === 'rejected') {
-                        statusBadge = '<span class="badge badge-danger">Cancelado</span>';
-                    } else {
-                        statusBadge = `<span class="badge badge-secondary">${pagamento.status}</span>`;
-                    }
-                    
-                    tr.innerHTML = `
-                        <td>${dataFormatada}</td>
-                        <td>${pagamento.description || 'Pagamento'}</td>
-                        <td>R$ ${pagamento.transaction_amount?.toFixed(2) || '0,00'}</td>
-                        <td>${statusBadge}</td>
-                        <td>${pagamento.payment_method_id === 'pix' ? 'PIX' : pagamento.payment_method_id}</td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-                
-            } catch (error) {
-                console.error('Erro ao carregar histórico de pagamentos:', error);
-                const tbody = document.getElementById('historicoPagamentosBody');
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--gray);">Erro ao carregar histórico</td></tr>';
-            }
-        }
-
-        // ==================== SISTEMA DE NOTIFICAÇÕES ====================
-
-        async function carregarNotificacoes() {
-            if (!usuarioLogado) return;
-            
-            try {
-                const response = await fetch(
-                    `${SUPABASE_URL}/rest/v1/notificacoes?usuario_id=eq.${usuarioLogado.id}&order=created_at.desc&limit=50`,
-                    {
-                        headers: {
-                            'apikey': SUPABASE_KEY,
-                            'Authorization': `Bearer ${SUPABASE_KEY}`,
-                            'Content-Type': 'application/json'
-                        }
-                    }
-                );
-                
-                if (!response.ok) throw new Error('Erro ao carregar notificações');
-                
-                const notificacoes = await response.json();
-                const container = document.getElementById('notificacoesList');
-                
-                if (notificacoes.length === 0) {
-                    container.innerHTML = `
-                        <div style="text-align: center; padding: 30px; color: var(--gray);">
-                            <i class="fas fa-bell-slash" style="font-size: 2rem; margin-bottom: 15px;"></i>
-                            <p>Nenhuma notificação no momento</p>
-                        </div>
-                    `;
-                    document.getElementById('notificationBadge').style.display = 'none';
-                    return;
-                }
-                
-                // Contar notificações não lidas
-                const naoLidas = notificacoes.filter(n => !n.lida).length;
-                const badge = document.getElementById('notificationBadge');
-                
-                if (naoLidas > 0) {
-                    badge.textContent = naoLidas;
-                    badge.style.display = 'inline';
-                } else {
-                    badge.style.display = 'none';
-                }
-                
-                // Renderizar notificações
-                container.innerHTML = '';
-                
-                notificacoes.forEach(notificacao => {
-                    const div = document.createElement('div');
-                    div.className = `notificacao-item ${notificacao.lida ? '' : 'unread'}`;
-                    
-                    // Determinar ícone baseado no tipo
-                    let icon = 'fas fa-bell';
-                    let iconColor = '#4361ee';
-                    
-                    if (notificacao.tipo === 'success') {
-                        icon = 'fas fa-check-circle';
-                        iconColor = '#28a745';
-                    } else if (notificacao.tipo === 'warning') {
-                        icon = 'fas fa-exclamation-triangle';
-                        iconColor = '#ffc107';
-                    } else if (notificacao.tipo === 'danger') {
-                        icon = 'fas fa-times-circle';
-                        iconColor = '#dc3545';
-                    } else if (notificacao.tipo === 'info') {
-                        icon = 'fas fa-info-circle';
-                        iconColor = '#17a2b8';
-                    }
-                    
-                    // Formatar data
-                    let dataFormatada = '';
-                    if (notificacao.created_at) {
-                        const data = new Date(notificacao.created_at);
-                        const agora = new Date();
-                        const diffMs = agora - data;
-                        const diffMins = Math.floor(diffMs / 60000);
-                        const diffHours = Math.floor(diffMs / 3600000);
-                        const diffDays = Math.floor(diffMs / 86400000);
-                        
-                        if (diffMins < 1) {
-                            dataFormatada = 'Agora mesmo';
-                        } else if (diffMins < 60) {
-                            dataFormatada = `Há ${diffMins} min${diffMins > 1 ? 's' : ''}`;
-                        } else if (diffHours < 24) {
-                            dataFormatada = `Há ${diffHours} h${diffHours > 1 ? 's' : ''}`;
-                        } else if (diffDays < 7) {
-                            dataFormatada = `Há ${diffDays} dia${diffDays > 1 ? 's' : ''}`;
-                        } else {
-                            dataFormatada = data.toLocaleDateString('pt-BR');
-                        }
-                    }
-                    
-                    div.innerHTML = `
-                        <div class="notificacao-icon" style="color: ${iconColor};">
-                            <i class="${icon}"></i>
-                        </div>
-                        <div class="notificacao-content">
-                            <div style="font-weight: ${notificacao.lida ? 'normal' : '600'};">
-                                ${notificacao.titulo}
-                            </div>
-                            <div style="font-size: 0.85rem; color: #666; margin-top: 4px;">
-                                ${notificacao.mensagem}
-                            </div>
-                            <div class="notificacao-time">
-                                ${dataFormatada}
-                            </div>
-                        </div>
-                        <div>
-                            ${notificacao.lida ? '' : '<span class="badge badge-primary" style="font-size: 0.6rem;">NOVA</span>'}
-                        </div>
-                    `;
-                    
-                    // Adicionar clique para marcar como lida
-                    div.addEventListener('click', () => {
-                        marcarComoLida(notificacao.id, div);
-                    });
-                    
-                    container.appendChild(div);
-                });
-                
-            } catch (error) {
-                console.error('Erro ao carregar notificações:', error);
-            }
-        }
-
-        async function criarNotificacao(usuarioId, titulo, mensagem, tipo = 'info') {
-            try {
-                const notificacao = {
-                    usuario_id: usuarioId,
-                    titulo: titulo,
-                    mensagem: mensagem,
-                    tipo: tipo,
-                    lida: false,
-                    created_at: new Date().toISOString()
-                };
-                
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/notificacoes`, {
-                    method: 'POST',
-                    headers: {
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'return=minimal'
-                    },
-                    body: JSON.stringify(notificacao)
-                });
-                
-                // Recarregar notificações se o usuário estiver logado
-                if (usuarioLogado && usuarioLogado.id === usuarioId) {
-                    setTimeout(carregarNotificacoes, 1000);
-                }
-                
-                return response.ok;
-                
-            } catch (error) {
-                console.error('Erro ao criar notificação:', error);
-                return false;
-            }
-        }
-
-        async function marcarComoLida(notificacaoId, element) {
-            try {
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/notificacoes?id=eq.${notificacaoId}`, {
-                    method: 'PATCH',
-                    headers: {
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'return=minimal'
-                    },
-                    body: JSON.stringify({ 
-                        lida: true,
-                        updated_at: new Date().toISOString()
-                    })
-                });
-                
-                if (response.ok && element) {
-                    element.classList.remove('unread');
-                    element.querySelector('.badge').remove();
-                    carregarNotificacoes(); // Recarregar para atualizar contador
-                }
-                
-            } catch (error) {
-                console.error('Erro ao marcar notificação como lida:', error);
-            }
-        }
-
-        async function marcarTodasComoLidas() {
-            if (!usuarioLogado) return;
-            
-            try {
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/notificacoes?usuario_id=eq.${usuarioLogado.id}&lida=eq.false`, {
-                    method: 'PATCH',
-                    headers: {
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'return=minimal'
-                    },
-                    body: JSON.stringify({ 
-                        lida: true,
-                        updated_at: new Date().toISOString()
-                    })
-                });
-                
-                if (response.ok) {
-                    showAlert('Todas as notificações marcadas como lidas', 'success');
-                    carregarNotificacoes();
-                }
-                
-            } catch (error) {
-                console.error('Erro ao marcar todas como lidas:', error);
-                showAlert('Erro ao marcar notificações como lidas', 'danger');
-            }
+            const mensagem = `Olá! Gostaria de solicitar o cancelamento do meu plano no FinancialControl.\n\nNome: ${nomeUsuario}\nE-mail: ${emailUsuario}\nPlano atual: ${planoAtual}\n\nPor favor, proceda com o cancelamento.`;
+            abrirWhatsApp(mensagem);
         }
 
         // ==================== FUNÇÕES DAS TRANSAÇÕES ====================
@@ -3169,14 +2252,14 @@
                 const transacoesRealizadas = usuarioLogado.transacoes_realizadas || 0;
                 
                 if (transacoesRealizadas >= LIMITE_TRANSACOES_DEMO) {
-                    showAlert(`Você atingiu o limite de ${LIMITE_TRANSACOES_DEMO} transações da versão demo. Assine um plano premium para continuar.`, 'warning');
-                    openTab('financeiro');
+                    showAlert(`Você atingiu o limite de ${LIMITE_TRANSACOES_DEMO} transações da versão demo. Assine o plano premium para continuar.`, 'warning');
+                    openTab('planos');
                     return;
                 }
                 
                 if (transacoesRealizadas >= LIMITE_TRANSACOES_DEMO - 2) {
                     const restantes = LIMITE_TRANSACOES_DEMO - transacoesRealizadas;
-                    showAlert(`Versão demo: ${restantes} transações restantes`, 'info');
+                    showAlert(`Versão demo: ${restantes} transações restantes. Assine o plano premium para acesso ilimitado.`, 'info');
                 }
             }
             
@@ -3184,15 +2267,22 @@
             const valor = parseFloat(document.getElementById('valor').value);
             const tipo = document.getElementById('tipo').value;
             const categoria = document.getElementById('categoria').value;
-            const dataTransacao = document.getElementById('dataTransacao').value;
+            const dataTransacaoInput = document.getElementById('dataTransacao').value;
             const tipoTransacao = document.getElementById('tipoTransacao').value;
             
-            if (!descricao || isNaN(valor) || valor <= 0 || !dataTransacao) {
+            if (!descricao || isNaN(valor) || valor <= 0 || !dataTransacaoInput) {
                 showAlert('Por favor, preencha todos os campos corretamente', 'warning');
                 return;
             }
             
-            const dataCorrigida = new Date(dataTransacao + 'T00:00:00');
+            // CORREÇÃO DO FUSO HORÁRIO: Usar a data do input e ajustar para Brasília
+            // O input date retorna no formato YYYY-MM-DD (local do usuário)
+            // Vamos criar uma data em Brasília
+            const [ano, mes, dia] = dataTransacaoInput.split('-');
+            const dataTransacao = new Date(ano, parseInt(mes) - 1, parseInt(dia), 12, 0, 0); // Meio-dia de Brasília
+            
+            // Formatar para ISO string (YYYY-MM-DD)
+            const dataFormatada = formatarDataParaInput(dataTransacao);
             
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
@@ -3208,26 +2298,30 @@
                         valor: valor,
                         tipo: tipo,
                         categoria: categoria,
-                        data_transacao: dataCorrigida.toISOString().split('T')[0]
+                        data_transacao: dataFormatada // Usar a data formatada
                     });
                 } else {
                     const numeroParcelas = parseInt(document.getElementById('numeroParcelas').value) || 2;
                     const frequencia = document.getElementById('frequencia').value;
                     
                     for (let i = 0; i < numeroParcelas; i++) {
-                        const dataParcela = new Date(dataCorrigida);
+                        // Usar a data base ajustada
+                        const dataBase = new Date(dataTransacao);
                         
                         if (frequencia === 'mensal') {
-                            dataParcela.setMonth(dataParcela.getMonth() + i);
+                            dataBase.setMonth(dataBase.getMonth() + i);
                         } else if (frequencia === 'bimestral') {
-                            dataParcela.setMonth(dataParcela.getMonth() + (i * 2));
+                            dataBase.setMonth(dataBase.getMonth() + (i * 2));
                         } else if (frequencia === 'trimestral') {
-                            dataParcela.setMonth(dataParcela.getMonth() + (i * 3));
+                            dataBase.setMonth(dataBase.getMonth() + (i * 3));
                         } else if (frequencia === 'semestral') {
-                            dataParcela.setMonth(dataParcela.getMonth() + (i * 6));
+                            dataBase.setMonth(dataBase.getMonth() + (i * 6));
                         } else if (frequencia === 'anual') {
-                            dataParcela.setFullYear(dataParcela.getFullYear() + i);
+                            dataBase.setFullYear(dataBase.getFullYear() + i);
                         }
+                        
+                        // Formatar a data para YYYY-MM-DD
+                        const dataParcela = formatarDataParaInput(dataBase);
                         
                         await salvarTransacao({
                             usuario_id: usuarioLogado.id,
@@ -3235,7 +2329,7 @@
                             valor: tipoTransacao === 'parcelada' ? (valor / numeroParcelas) : valor,
                             tipo: tipo,
                             categoria: categoria,
-                            data_transacao: dataParcela.toISOString().split('T')[0]
+                            data_transacao: dataParcela
                         });
                     }
                 }
@@ -3246,7 +2340,10 @@
                 }
                 
                 this.reset();
-                document.getElementById('dataTransacao').value = new Date().toISOString().split('T')[0];
+                // Definir data atual no formato YYYY-MM-DD
+                const hojeBrasilia = getDataBrasilia();
+                const dataAtualFormatada = formatarDataParaInput(hojeBrasilia);
+                document.getElementById('dataTransacao').value = dataAtualFormatada;
                 document.getElementById('parcelamentoOptions').classList.remove('active');
                 
                 carregarTransacoes();
@@ -3312,15 +2409,10 @@
                     usuarioLogado.transacoes_realizadas = novasTransacoes;
                     atualizarBadgePlano();
                     
-                    // Criar notificação se estiver perto do limite
+                    // Aviso se estiver perto do limite
                     if (novasTransacoes >= LIMITE_TRANSACOES_DEMO - 3) {
                         const restantes = LIMITE_TRANSACOES_DEMO - novasTransacoes;
-                        await criarNotificacao(
-                            usuarioLogado.id,
-                            'Limite da Demo Aproximando',
-                            `Você tem ${restantes} transações restantes na versão demo. Assine um plano premium para continuar usando sem limites.`,
-                            'warning'
-                        );
+                        showAlert(`Versão demo: ${restantes} transações restantes. Assine o plano premium para acesso ilimitado.`, 'warning');
                     }
                 } else {
                     throw new Error('Erro ao atualizar contador');
@@ -3363,7 +2455,7 @@
                     const [anoFiltro, mesFiltroNum] = mesFiltro.split('-');
                     
                     transacoesFiltradas = todasTransacoes.filter(transacao => {
-                        const dataTransacao = new Date(transacao.data_transacao);
+                        const dataTransacao = parseDataBrasilia(transacao.data_transacao);
                         const anoTransacao = dataTransacao.getFullYear();
                         const mesTransacao = dataTransacao.getMonth() + 1;
                         
@@ -3391,7 +2483,7 @@
             transacoes.forEach(transacao => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${formatarData(transacao.data_transacao)}</td>
+                    <td>${formatarDataParaExibicao(transacao.data_transacao)}</td>
                     <td title="${transacao.descricao}">${transacao.descricao.length > 15 ? transacao.descricao.substring(0, 15) + '...' : transacao.descricao}</td>
                     <td>${transacao.categoria}</td>
                     <td class="${transacao.tipo}">R$ ${parseFloat(transacao.valor).toFixed(2)}</td>
@@ -3437,7 +2529,7 @@
             if (!usuarioLogado) return;
             
             const mesSelecionado = document.getElementById('filtroMesDashboard').value;
-            const mesAtual = mesSelecionado || new Date().toISOString().slice(0, 7);
+            const mesAtual = mesSelecionado || getMesAtualBrasilia();
             
             try {
                 const [ano, mes] = mesAtual.split('-');
@@ -3458,7 +2550,7 @@
                 const todasTransacoes = await response.json();
                 
                 const transacoesMes = todasTransacoes.filter(t => {
-                    const dataTransacao = new Date(t.data_transacao);
+                    const dataTransacao = parseDataBrasilia(t.data_transacao);
                     const anoTransacao = dataTransacao.getFullYear();
                     const mesTransacao = dataTransacao.getMonth() + 1;
                     
@@ -3500,7 +2592,6 @@
                 
             } catch (error) {
                 console.error('Erro ao carregar dashboard:', error);
-                showAlert('Erro ao carregar dashboard', 'warning');
             }
         }
 
@@ -3613,11 +2704,11 @@
             
             try {
                 // Criar dados dos últimos 6 meses
-                const hoje = new Date();
+                const hoje = getDataBrasilia();
                 const dadosPorMes = {};
                 
                 for (let i = 5; i >= 0; i--) {
-                    const data = new Date();
+                    const data = new Date(hoje);
                     data.setMonth(hoje.getMonth() - i);
                     data.setDate(1);
                     const chave = `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, '0')}`;
@@ -3626,7 +2717,7 @@
                 
                 // Processar transações
                 todasTransacoes.forEach(t => {
-                    const dataTransacao = new Date(t.data_transacao);
+                    const dataTransacao = parseDataBrasilia(t.data_transacao);
                     const mes = `${dataTransacao.getFullYear()}-${String(dataTransacao.getMonth() + 1).padStart(2, '0')}`;
                     
                     if (dadosPorMes[mes]) {
@@ -3717,17 +2808,6 @@
             }
         }
 
-        // ==================== FUNÇÕES AUXILIARES ====================
-
-        function formatarData(dataString) {
-            try {
-                const data = new Date(dataString);
-                return data.toLocaleDateString('pt-BR');
-            } catch (e) {
-                return 'Data inválida';
-            }
-        }
-
         // ==================== ALTERAR SENHA ====================
 
         document.getElementById('alterarSenhaForm').addEventListener('submit', async function(e) {
@@ -3789,6 +2869,8 @@
             const novoPlano = document.getElementById('novoPlano').value;
             
             try {
+                const dataBrasilia = getDataBrasilia();
+                
                 const novoUsuario = {
                     nome: novoNome,
                     email: novoEmail,
@@ -3796,7 +2878,8 @@
                     plano: novoPlano,
                     transacoes_realizadas: 0,
                     ativo: true,
-                    nivel_acesso: novoNivelAcesso
+                    nivel_acesso: novoNivelAcesso,
+                    data_cadastro: dataBrasilia.toISOString()
                 };
                 
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/usuarios`, {
@@ -3849,39 +2932,44 @@
                 }
                 
                 const usuariosDemo = await response.json();
+                usuariosDemoCache = usuariosDemo;
                 
-                const tbody = document.getElementById('usuariosDemoBody');
-                tbody.innerHTML = '';
-                
-                if (usuariosDemo.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--gray);">Nenhum usuário demo encontrado</td></tr>';
-                    return;
-                }
-                
-                usuariosDemo.forEach(usuario => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${usuario.nome || 'Sem nome'}</td>
-                        <td>${usuario.email || 'Sem email'}</td>
-                        <td>${usuario.transacoes_realizadas || 0}/10</td>
-                        <td>${usuario.data_cadastro ? new Date(usuario.data_cadastro).toLocaleDateString('pt-BR') : '-'}</td>
-                        <td class="action-buttons">
-                            <button onclick="liberarPremium('${usuario.id}')" class="btn btn-success btn-xs">
-                                <i class="fas fa-crown"></i> Liberar
-                            </button>
-                            <button onclick="excluirUsuario('${usuario.id}')" class="btn btn-danger btn-xs">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
+                renderizarUsuariosDemo(usuariosDemo);
                 
             } catch (error) {
                 console.error('Erro ao carregar usuários demo:', error);
                 const tbody = document.getElementById('usuariosDemoBody');
                 tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--gray);">Erro ao carregar usuários</td></tr>';
             }
+        }
+
+        function renderizarUsuariosDemo(usuarios) {
+            const tbody = document.getElementById('usuariosDemoBody');
+            tbody.innerHTML = '';
+            
+            if (usuarios.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--gray);">Nenhum usuário demo encontrado</td></tr>';
+                return;
+            }
+            
+            usuarios.forEach(usuario => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${usuario.nome || 'Sem nome'}</td>
+                    <td>${usuario.email || 'Sem email'}</td>
+                    <td>${usuario.transacoes_realizadas || 0}/10</td>
+                    <td>${usuario.data_cadastro ? formatarDataParaExibicao(usuario.data_cadastro) : '-'}</td>
+                    <td class="action-buttons">
+                        <button onclick="liberarPremium('${usuario.id}')" class="btn btn-success btn-xs">
+                            <i class="fas fa-crown"></i> Liberar
+                        </button>
+                        <button onclick="excluirUsuario('${usuario.id}')" class="btn btn-danger btn-xs">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
         }
 
         async function carregarUsuarios() {
@@ -3907,195 +2995,87 @@
                 
                 // Filtrar usuários premium
                 const usuariosPremium = usuarios.filter(u => u.plano === 'premium');
+                usuariosPremiumCache = usuariosPremium;
                 
-                const tbodyPremium = document.getElementById('usuariosPremiumBody');
-                tbodyPremium.innerHTML = '';
-                
-                if (usuariosPremium.length > 0) {
-                    usuariosPremium.forEach(usuario => {
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td>${usuario.nome || 'Sem nome'}</td>
-                            <td>${usuario.email || 'Sem email'}</td>
-                            <td>${usuario.ativo ? 'Ativo' : 'Inativo'}</td>
-                            <td>${usuario.data_cadastro ? new Date(usuario.data_cadastro).toLocaleDateString('pt-BR') : '-'}</td>
-                            <td class="action-buttons">
-                                <button onclick="rebaixarParaDemo('${usuario.id}')" class="btn btn-warning btn-xs">
-                                    <i class="fas fa-gift"></i> Rebaixar
-                                </button>
-                                <button onclick="excluirUsuario('${usuario.id}')" class="btn btn-danger btn-xs">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
-                        `;
-                        tbodyPremium.appendChild(tr);
-                    });
-                } else {
-                    tbodyPremium.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--gray);">Nenhum usuário premium encontrado</td></tr>';
-                }
+                renderizarUsuariosPremium(usuariosPremium);
                 
             } catch (error) {
                 console.error('Erro ao carregar usuários:', error);
             }
         }
 
-        async function carregarDashboardPagamentos() {
-            if (!usuarioLogado || usuarioLogado.nivel_acesso !== 'admin') return;
+        function renderizarUsuariosPremium(usuarios) {
+            const tbodyPremium = document.getElementById('usuariosPremiumBody');
+            tbodyPremium.innerHTML = '';
             
-            try {
-                // Carregar estatísticas de pagamentos
-                const responsePagamentos = await fetch(
-                    `${SUPABASE_URL}/rest/v1/pagamentos?status=eq.approved`,
-                    {
-                        headers: {
-                            'apikey': SUPABASE_KEY,
-                            'Authorization': `Bearer ${SUPABASE_KEY}`,
-                            'Content-Type': 'application/json'
-                        }
-                    }
-                );
-                
-                const responsePagamentosPendentes = await fetch(
-                    `${SUPABASE_URL}/rest/v1/pagamentos?status=eq.pending`,
-                    {
-                        headers: {
-                            'apikey': SUPABASE_KEY,
-                            'Authorization': `Bearer ${SUPABASE_KEY}`,
-                            'Content-Type': 'application/json'
-                        }
-                    }
-                );
-                
-                const responseUsuariosPremium = await fetch(
-                    `${SUPABASE_URL}/rest/v1/usuarios?plano=eq.premium&ativo=eq.true`,
-                    {
-                        headers: {
-                            'apikey': SUPABASE_KEY,
-                            'Authorization': `Bearer ${SUPABASE_KEY}`,
-                            'Content-Type': 'application/json'
-                        }
-                    }
-                );
-                
-                const responseUltimosPagamentos = await fetch(
-                    `${SUPABASE_URL}/rest/v1/pagamentos?order=date_created.desc&limit=10`,
-                    {
-                        headers: {
-                            'apikey': SUPABASE_KEY,
-                            'Authorization': `Bearer ${SUPABASE_KEY}`,
-                            'Content-Type': 'application/json'
-                        }
-                    }
-                );
-                
-                if (!responsePagamentos.ok || !responseUsuariosPremium.ok) {
-                    throw new Error('Erro ao carregar dashboard de pagamentos');
-                }
-                
-                const pagamentos = await responsePagamentos.json();
-                const pagamentosPendentes = await responsePagamentosPendentes.json();
-                const usuariosPremium = await responseUsuariosPremium.json();
-                const ultimosPagamentos = await responseUltimosPagamentos.json();
-                
-                // Calcular receita total
-                let receitaTotal = 0;
-                pagamentos.forEach(p => {
-                    receitaTotal += p.transaction_amount || 0;
-                });
-                
-                // Calcular receita deste mês
-                const hoje = new Date();
-                const mesAtual = hoje.getMonth();
-                const anoAtual = hoje.getFullYear();
-                
-                let receitaMes = 0;
-                pagamentos.forEach(p => {
-                    if (p.date_approved) {
-                        const dataPagamento = new Date(p.date_approved);
-                        if (dataPagamento.getMonth() === mesAtual && dataPagamento.getFullYear() === anoAtual) {
-                            receitaMes += p.transaction_amount || 0;
-                        }
-                    }
-                });
-                
-                // Atualizar dashboard
-                document.getElementById('receitaTotal').textContent = `R$ ${receitaTotal.toFixed(2)}`;
-                document.getElementById('receitaMes').textContent = `R$ ${receitaMes.toFixed(2)}`;
-                document.getElementById('totalPremium').textContent = usuariosPremium.length;
-                document.getElementById('pagamentosPendentes').textContent = pagamentosPendentes.length;
-                
-                // Atualizar tabela de últimos pagamentos
-                const tbody = document.getElementById('ultimosPagamentosBody');
-                tbody.innerHTML = '';
-                
-                if (ultimosPagamentos.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--gray);">Nenhum pagamento encontrado</td></tr>';
-                    return;
-                }
-                
-                // Buscar nomes dos usuários
-                for (const pagamento of ultimosPagamentos) {
-                    const responseUsuario = await fetch(
-                        `${SUPABASE_URL}/rest/v1/usuarios?id=eq.${pagamento.usuario_id}`,
-                        {
-                            headers: {
-                                'apikey': SUPABASE_KEY,
-                                'Authorization': `Bearer ${SUPABASE_KEY}`,
-                                'Content-Type': 'application/json'
-                            }
-                        }
-                    );
-                    
-                    let nomeUsuario = 'Usuário não encontrado';
-                    if (responseUsuario.ok) {
-                        const usuario = await responseUsuario.json();
-                        if (usuario.length > 0) {
-                            nomeUsuario = usuario[0].nome;
-                        }
-                    }
-                    
-                    // Formatar data
-                    let dataFormatada = '-';
-                    if (pagamento.date_created) {
-                        const data = new Date(pagamento.date_created);
-                        dataFormatada = data.toLocaleDateString('pt-BR');
-                    }
-                    
-                    // Determinar badge de status
-                    let statusBadge = '';
-                    if (pagamento.status === 'approved') {
-                        statusBadge = '<span class="badge badge-success">Aprovado</span>';
-                    } else if (pagamento.status === 'pending') {
-                        statusBadge = '<span class="badge badge-warning">Pendente</span>';
-                    } else {
-                        statusBadge = '<span class="badge badge-secondary">' + pagamento.status + '</span>';
-                    }
-                    
+            if (usuarios.length > 0) {
+                usuarios.forEach(usuario => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td>${nomeUsuario}</td>
-                        <td>R$ ${(pagamento.transaction_amount || 0).toFixed(2)}</td>
-                        <td>${dataFormatada}</td>
-                        <td>${statusBadge}</td>
-                        <td>${pagamento.plano_tipo === 'mensal' ? 'Mensal' : 'Anual'}</td>
+                        <td>${usuario.nome || 'Sem nome'}</td>
+                        <td>${usuario.email || 'Sem email'}</td>
+                        <td>${usuario.ativo ? 'Ativo' : 'Inativo'}</td>
+                        <td>${usuario.data_cadastro ? formatarDataParaExibicao(usuario.data_cadastro) : '-'}</td>
+                        <td class="action-buttons">
+                            <button onclick="rebaixarParaDemoAdmin('${usuario.id}')" class="btn btn-warning btn-xs">
+                                <i class="fas fa-gift"></i> Rebaixar
+                            </button>
+                            <button onclick="excluirUsuario('${usuario.id}')" class="btn btn-danger btn-xs">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
                     `;
-                    tbody.appendChild(tr);
-                }
-                
-            } catch (error) {
-                console.error('Erro ao carregar dashboard de pagamentos:', error);
+                    tbodyPremium.appendChild(tr);
+                });
+            } else {
+                tbodyPremium.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--gray);">Nenhum usuário premium encontrado</td></tr>';
             }
+        }
+
+        function filtrarUsuarios() {
+            const termo = document.getElementById('buscarUsuario').value.toLowerCase().trim();
+            
+            if (document.getElementById('usuariosDemoSection').style.display === 'block') {
+                // Filtrar usuários demo
+                if (!termo) {
+                    renderizarUsuariosDemo(usuariosDemoCache);
+                } else {
+                    const usuariosFiltrados = usuariosDemoCache.filter(usuario => {
+                        return (usuario.nome && usuario.nome.toLowerCase().includes(termo)) ||
+                               (usuario.email && usuario.email.toLowerCase().includes(termo));
+                    });
+                    renderizarUsuariosDemo(usuariosFiltrados);
+                }
+            } else {
+                // Filtrar usuários premium
+                if (!termo) {
+                    renderizarUsuariosPremium(usuariosPremiumCache);
+                } else {
+                    const usuariosFiltrados = usuariosPremiumCache.filter(usuario => {
+                        return (usuario.nome && usuario.nome.toLowerCase().includes(termo)) ||
+                               (usuario.email && usuario.email.toLowerCase().includes(termo));
+                    });
+                    renderizarUsuariosPremium(usuariosFiltrados);
+                }
+            }
+        }
+
+        function limparBusca() {
+            document.getElementById('buscarUsuario').value = '';
+            filtrarUsuarios();
         }
 
         function mostrarUsuariosDemo() {
             document.getElementById('usuariosDemoSection').style.display = 'block';
             document.getElementById('usuariosPremiumSection').style.display = 'none';
+            document.getElementById('buscarUsuario').value = '';
             carregarUsuariosDemo();
         }
 
         function mostrarUsuariosPremium() {
             document.getElementById('usuariosDemoSection').style.display = 'none';
             document.getElementById('usuariosPremiumSection').style.display = 'block';
+            document.getElementById('buscarUsuario').value = '';
             carregarUsuarios();
         }
 
@@ -4120,6 +3100,12 @@
                         showAlert('Usuário liberado como Premium!', 'success');
                         carregarUsuariosDemo();
                         carregarUsuarios();
+                        
+                        // Se for o usuário atual, atualizar a interface
+                        if (usuarioLogado && usuarioLogado.id === usuarioId) {
+                            usuarioLogado.plano = 'premium';
+                            atualizarInfoUsuario();
+                        }
                     } else {
                         throw new Error('Erro ao liberar premium');
                     }
@@ -4130,7 +3116,7 @@
             }
         }
 
-        async function rebaixarParaDemo(usuarioId) {
+        async function rebaixarParaDemoAdmin(usuarioId) {
             if (confirm('Rebaixar este usuário para Demo?')) {
                 try {
                     const response = await fetch(`${SUPABASE_URL}/rest/v1/usuarios?id=eq.${usuarioId}`, {
@@ -4151,6 +3137,12 @@
                         showAlert('Usuário rebaixado para Demo!', 'success');
                         carregarUsuarios();
                         carregarUsuariosDemo();
+                        
+                        // Se for o usuário atual, atualizar a interface
+                        if (usuarioLogado && usuarioLogado.id === usuarioId) {
+                            usuarioLogado.plano = 'demo';
+                            atualizarInfoUsuario();
+                        }
                     } else {
                         throw new Error('Erro ao rebaixar para demo');
                     }
@@ -4193,31 +3185,7 @@
                         }
                     );
                     
-                    // Excluir pagamentos
-                    await fetch(
-                        `${SUPABASE_URL}/rest/v1/pagamentos?usuario_id=eq.${usuarioId}`,
-                        {
-                            method: 'DELETE',
-                            headers: {
-                                'apikey': SUPABASE_KEY,
-                                'Authorization': `Bearer ${SUPABASE_KEY}`
-                            }
-                        }
-                    );
-                    
-                    // Excluir notificações
-                    await fetch(
-                        `${SUPABASE_URL}/rest/v1/notificacoes?usuario_id=eq.${usuarioId}`,
-                        {
-                            method: 'DELETE',
-                            headers: {
-                                'apikey': SUPABASE_KEY,
-                                'Authorization': `Bearer ${SUPABASE_KEY}`
-                            }
-                        }
-                    );
-                    
-                    // Depois excluir o usuário
+                    // Excluir o usuário
                     const response = await fetch(`${SUPABASE_URL}/rest/v1/usuarios?id=eq.${usuarioId}`, {
                         method: 'DELETE',
                         headers: {
@@ -4230,7 +3198,6 @@
                         showAlert('Usuário excluído com sucesso!', 'success');
                         carregarUsuariosDemo();
                         carregarUsuarios();
-                        carregarDashboardPagamentos();
                     } else {
                         throw new Error('Erro ao excluir usuário');
                     }
@@ -4270,7 +3237,7 @@
                 const todasTransacoes = await response.json();
                 
                 const transacoes = todasTransacoes.filter(t => {
-                    const dataTransacao = new Date(t.data_transacao);
+                    const dataTransacao = parseDataBrasilia(t.data_transacao);
                     const anoTransacao = dataTransacao.getFullYear();
                     const mesTransacao = dataTransacao.getMonth() + 1;
                     
@@ -4291,12 +3258,43 @@
             let receitas = 0;
             let despesas = 0;
             
+            // Calcular gastos por categoria
+            const gastosPorCategoria = {};
             transacoes.forEach(t => {
-                if (t.tipo === 'receita') receitas += parseFloat(t.valor);
-                else despesas += parseFloat(t.valor);
+                if (t.tipo === 'receita') {
+                    receitas += parseFloat(t.valor);
+                } else {
+                    despesas += parseFloat(t.valor);
+                    if (!gastosPorCategoria[t.categoria]) {
+                        gastosPorCategoria[t.categoria] = 0;
+                    }
+                    gastosPorCategoria[t.categoria] += parseFloat(t.valor);
+                }
             });
 
             const saldo = receitas - despesas;
+
+            // Calcular percentuais
+            const totalDespesas = Object.values(gastosPorCategoria).reduce((a, b) => a + b, 0);
+            const categoriasComPercentual = Object.keys(gastosPorCategoria).map(categoria => {
+                const valor = gastosPorCategoria[categoria];
+                const percentual = totalDespesas > 0 ? (valor / totalDespesas * 100).toFixed(1) : 0;
+                return {
+                    categoria,
+                    valor,
+                    percentual
+                };
+            }).sort((a, b) => b.valor - a.valor); // Ordenar do maior para o menor
+
+            // Salvar dados para o PDF
+            relatorioAtual = {
+                transacoes: transacoes,
+                mesRelatorio: mesRelatorio,
+                receitas: receitas,
+                despesas: despesas,
+                saldo: saldo,
+                categorias: categoriasComPercentual
+            };
 
             let html = `
                 <div class="card">
@@ -4326,8 +3324,51 @@
                         </div>
                     </div>
 
+                    <!-- Gastos por Categoria -->
+                    <div class="card" style="margin-top: 20px;">
+                        <h4><i class="fas fa-chart-pie"></i> Gastos por Categoria</h4>
+                        <div class="table-container" style="margin-top: 10px;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Categoria</th>
+                                        <th>Valor</th>
+                                        <th>Percentual</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+            `;
+
+            if (categoriasComPercentual.length === 0) {
+                html += `
+                    <tr>
+                        <td colspan="3" style="text-align: center; color: var(--gray);">
+                            Nenhum gasto por categoria no período
+                        </td>
+                    </tr>
+                `;
+            } else {
+                categoriasComPercentual.forEach(item => {
+                    html += `
+                        <tr>
+                            <td>${item.categoria}</td>
+                            <td class="despesa">R$ ${item.valor.toFixed(2)}</td>
+                            <td>${item.percentual}%</td>
+                        </tr>
+                    `;
+                });
+            }
+
+            html += `
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Tabela de transações -->
                     <div class="table-container" style="margin-top: 20px;">
-                        <table>
+                        <h4><i class="fas fa-list"></i> Transações Detalhadas</h4>
+                        <table style="margin-top: 10px;">
                             <thead>
                                 <tr>
                                     <th>Data</th>
@@ -4352,7 +3393,7 @@
                 transacoes.forEach(transacao => {
                     html += `
                         <tr>
-                            <td>${formatarData(transacao.data_transacao)}</td>
+                            <td>${formatarDataParaExibicao(transacao.data_transacao)}</td>
                             <td>${transacao.descricao}</td>
                             <td>${transacao.categoria}</td>
                             <td class="${transacao.tipo}">R$ ${parseFloat(transacao.valor).toFixed(2)}</td>
@@ -4371,7 +3412,7 @@
                         <button onclick="exportarParaExcel('${mesRelatorio}')" class="btn btn-success">
                             <i class="fas fa-file-excel"></i> Exportar para Excel
                         </button>
-                        <button onclick="exportarParaPDF('${mesRelatorio}')" class="btn btn-danger">
+                        <button onclick="gerarPDF()" class="btn btn-danger">
                             <i class="fas fa-file-pdf"></i> Exportar para PDF
                         </button>
                     </div>
@@ -4400,48 +3441,168 @@
             }
         }
 
-        function exportarParaPDF(mesRelatorio) {
+        function gerarPDF() {
             try {
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF();
                 
-                doc.setFontSize(18);
-                doc.text('Relatório Financeiro', 20, 20);
-                doc.setFontSize(12);
-                doc.text(`Período: ${mesRelatorio}`, 20, 30);
-                doc.text(`Emitido em: ${new Date().toLocaleDateString('pt-BR')}`, 20, 40);
+                const relatorio = relatorioAtual;
+                let yPos = 20;
                 
-                const tabela = document.querySelector('#relatorioResultado table tbody');
-                if (tabela) {
-                    let yPos = 60;
+                // Título
+                doc.setFontSize(18);
+                doc.text('Relatório Financeiro - FinancialControl', 20, yPos);
+                yPos += 10;
+                
+                doc.setFontSize(12);
+                doc.text(`Período: ${relatorio.mesRelatorio}`, 20, yPos);
+                yPos += 8;
+                doc.text(`Emitido em: ${formatarDataParaExibicao(getDataBrasilia())}`, 20, yPos);
+                yPos += 8;
+                doc.text(`Usuário: ${usuarioLogado.nome}`, 20, yPos);
+                yPos += 15;
+                
+                // Resumo Financeiro
+                doc.setFontSize(14);
+                doc.text('Resumo Financeiro', 20, yPos);
+                yPos += 10;
+                
+                doc.setFontSize(10);
+                doc.text(`Receitas: R$ ${relatorio.receitas.toFixed(2)}`, 30, yPos);
+                yPos += 7;
+                doc.text(`Despesas: R$ ${relatorio.despesas.toFixed(2)}`, 30, yPos);
+                yPos += 7;
+                
+                const saldoClass = relatorio.saldo >= 0 ? 'Positivo' : 'Negativo';
+                const saldoCor = relatorio.saldo >= 0 ? '#28a745' : '#dc3545';
+                
+                doc.setTextColor(saldoCor);
+                doc.text(`Saldo: R$ ${relatorio.saldo.toFixed(2)} (${saldoClass})`, 30, yPos);
+                doc.setTextColor(0, 0, 0); // Resetar cor
+                yPos += 7;
+                
+                doc.text(`Total de Transações: ${relatorio.transacoes.length}`, 30, yPos);
+                yPos += 15;
+                
+                // Gastos por Categoria com Percentual
+                if (relatorio.categorias && relatorio.categorias.length > 0) {
+                    if (yPos > 250) {
+                        doc.addPage();
+                        yPos = 20;
+                    }
+                    
                     doc.setFontSize(14);
-                    doc.text('Transações', 20, yPos);
+                    doc.text('Gastos por Categoria', 20, yPos);
                     yPos += 10;
                     
-                    const linhas = tabela.querySelectorAll('tr');
-                    linhas.forEach(linha => {
-                        const colunas = linha.querySelectorAll('td');
-                        if (colunas.length === 5) {
-                            if (yPos > 270) {
-                                doc.addPage();
-                                yPos = 20;
-                            }
+                    doc.setFontSize(10);
+                    // Cabeçalho da tabela
+                    doc.text('Categoria', 20, yPos);
+                    doc.text('Valor', 100, yPos);
+                    doc.text('%', 160, yPos);
+                    yPos += 7;
+                    
+                    // Linha separadora
+                    doc.line(20, yPos, 190, yPos);
+                    yPos += 5;
+                    
+                    // Dados das categorias
+                    relatorio.categorias.forEach(item => {
+                        if (yPos > 270) {
+                            doc.addPage();
+                            yPos = 20;
                             
+                            // Cabeçalho na nova página
                             doc.setFontSize(10);
-                            doc.text(colunas[0].textContent, 20, yPos);
-                            doc.text(colunas[1].textContent, 40, yPos);
-                            doc.text(colunas[2].textContent, 80, yPos);
-                            doc.text(colunas[3].textContent, 120, yPos);
-                            doc.text(colunas[4].textContent, 160, yPos);
-                            yPos += 10;
+                            doc.text('Categoria', 20, yPos);
+                            doc.text('Valor', 100, yPos);
+                            doc.text('%', 160, yPos);
+                            yPos += 7;
+                            doc.line(20, yPos, 190, yPos);
+                            yPos += 5;
                         }
+                        
+                        doc.text(item.categoria, 20, yPos);
+                        doc.text(`R$ ${item.valor.toFixed(2)}`, 100, yPos);
+                        doc.text(`${item.percentual}%`, 160, yPos);
+                        yPos += 7;
+                    });
+                    
+                    yPos += 10;
+                }
+                
+                // Transações Detalhadas
+                if (relatorio.transacoes && relatorio.transacoes.length > 0) {
+                    if (yPos > 250) {
+                        doc.addPage();
+                        yPos = 20;
+                    }
+                    
+                    doc.setFontSize(14);
+                    doc.text('Transações Detalhadas', 20, yPos);
+                    yPos += 10;
+                    
+                    // Cabeçalho da tabela
+                    doc.setFontSize(9);
+                    doc.text('Data', 20, yPos);
+                    doc.text('Descrição', 40, yPos);
+                    doc.text('Categoria', 90, yPos);
+                    doc.text('Valor', 130, yPos);
+                    doc.text('Tipo', 160, yPos);
+                    yPos += 7;
+                    
+                    // Linha separadora
+                    doc.line(20, yPos, 190, yPos);
+                    yPos += 5;
+                    
+                    // Dados das transações
+                    relatorio.transacoes.forEach(transacao => {
+                        if (yPos > 270) {
+                            doc.addPage();
+                            yPos = 20;
+                            
+                            // Cabeçalho na nova página
+                            doc.setFontSize(9);
+                            doc.text('Data', 20, yPos);
+                            doc.text('Descrição', 40, yPos);
+                            doc.text('Categoria', 90, yPos);
+                            doc.text('Valor', 130, yPos);
+                            doc.text('Tipo', 160, yPos);
+                            yPos += 7;
+                            doc.line(20, yPos, 190, yPos);
+                            yPos += 5;
+                        }
+                        
+                        doc.setFontSize(8);
+                        doc.text(formatarDataParaExibicao(transacao.data_transacao), 20, yPos);
+                        doc.text(transacao.descricao.substring(0, 30), 40, yPos);
+                        doc.text(transacao.categoria, 90, yPos);
+                        
+                        // Colorir valor baseado no tipo
+                        if (transacao.tipo === 'receita') {
+                            doc.setTextColor(40, 167, 69); // Verde
+                        } else {
+                            doc.setTextColor(220, 53, 69); // Vermelho
+                        }
+                        
+                        doc.text(`R$ ${parseFloat(transacao.valor).toFixed(2)}`, 130, yPos);
+                        doc.setTextColor(0, 0, 0); // Resetar cor
+                        
+                        doc.text(transacao.tipo === 'receita' ? 'Receita' : 'Despesa', 160, yPos);
+                        yPos += 6;
                     });
                 }
                 
-                doc.save(`relatorio_${mesRelatorio}.pdf`);
+                // Rodapé
+                doc.setFontSize(8);
+                doc.setTextColor(128, 128, 128);
+                doc.text('Gerado por FinancialControl - Sistema de Gestão Financeira', 20, 285);
+                
+                doc.save(`relatorio_${relatorio.mesRelatorio}.pdf`);
                 showAlert('Relatório exportado para PDF com sucesso!', 'success');
             } catch (error) {
-                showAlert('Erro ao exportar para PDF', 'danger');
+                console.error('Erro ao exportar para PDF:', error);
+                showAlert('Erro ao exportar para PDF: ' + error.message, 'danger');
             }
         }
 
@@ -4450,6 +3611,11 @@
         function openTab(tabName, event) {
             if (tabName === 'admin' && (!usuarioLogado || usuarioLogado.nivel_acesso !== 'admin')) {
                 showAlert('Acesso negado. Apenas administradores podem acessar esta área.', 'warning');
+                return;
+            }
+            
+            if (tabName === 'cancelamento' && (!usuarioLogado || usuarioLogado.plano !== 'premium')) {
+                showAlert('Apenas usuários premium podem acessar a aba de cancelamento.', 'warning');
                 return;
             }
             
@@ -4479,15 +3645,15 @@
                 carregarDashboard();
             } else if (tabName === 'transacoes') {
                 carregarTransacoes();
-            } else if (tabName === 'financeiro') {
+            } else if (tabName === 'planos') {
                 carregarStatusAssinatura();
-                carregarHistoricoPagamentos();
-            } else if (tabName === 'notificacoes') {
-                carregarNotificacoes();
             } else if (tabName === 'admin' && usuarioLogado && usuarioLogado.nivel_acesso === 'admin') {
                 carregarUsuariosDemo();
-                carregarDashboardPagamentos();
             }
+        }
+
+        function abrirAbaCancelamento() {
+            openTab('cancelamento');
         }
 
         function logout() {
@@ -4526,11 +3692,14 @@
         // ==================== INICIALIZAÇÃO ====================
 
         document.addEventListener('DOMContentLoaded', function() {
-            const hoje = new Date().toISOString().slice(0, 7);
-            document.getElementById('dataTransacao').value = new Date().toISOString().split('T')[0];
-            document.getElementById('filtroMes').value = hoje;
-            document.getElementById('mesRelatorio').value = hoje;
-            document.getElementById('filtroMesDashboard').value = hoje;
+            const hojeBrasilia = getDataBrasilia();
+            const mesAtual = getMesAtualBrasilia();
+            const dataAtualFormatada = formatarDataParaInput(hojeBrasilia);
+            
+            document.getElementById('dataTransacao').value = dataAtualFormatada;
+            document.getElementById('filtroMes').value = mesAtual;
+            document.getElementById('mesRelatorio').value = mesAtual;
+            document.getElementById('filtroMesDashboard').value = mesAtual;
             
             carregarDadosLogin();
             
